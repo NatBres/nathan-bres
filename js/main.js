@@ -86,7 +86,7 @@ if (form) {
     };
 
     try {
-      const res = await fetch('https://formspree.io/f/xwpbvqbj', {
+      const res = await fetch('https://formspree.io/f/mlgkpvbd', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),

@@ -235,7 +235,11 @@ section { padding: 6rem 2rem; }
   position: relative;
   overflow: hidden;
 }
-.card-thumb--lineup { background: linear-gradient(135deg, #1a3a5c 0%, #0f2840 100%); }
+.card-thumb--lineup {
+  background-image: url('../img/lineup-thumb.png');
+  background-size: cover;
+  background-position: center;
+}
 .card-thumb::after {
   content: '';
   position: absolute;
