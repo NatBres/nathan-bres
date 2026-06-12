@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPS Prediction Model — Nathan Brès</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg2: #f8f9fc;
+      --bg3: #f0f2f8;
+      --navy: #0A1628;
+      --navy2: #1a2e4a;
+      --text: #1a1f2e;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --gold: #d97706;
+      --font: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    .page-header { background: var(--navy); color: white; padding: 3rem 2rem 2.5rem; text-align: center; }
+    .page-header .eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C8A96E; margin-bottom: 0.75rem; }
+    .page-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .page-header p { font-size: 1rem; color: rgba(255,255,255,0.65); max-width: 560px; margin: 0 auto 1.5rem; }
+    .model-badges { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .badge { font-family: var(--mono); font-size: 0.72rem; padding: 0.35rem 0.85rem; border-radius: 2px; letter-spacing: 0.06em; font-weight: 500; }
+    .badge-blue  { background: rgba(37,99,235,0.2); color: #93c5fd; border: 1px solid rgba(37,99,235,0.3); }
+    .badge-green { background: rgba(22,163,74,0.2); color: #86efac; border: 1px solid rgba(22,163,74,0.3); }
+    .badge-gold  { background: rgba(200,169,110,0.15); color: #C8A96E; border: 1px solid rgba(200,169,110,0.3); }
+
+    .stats-bar { background: var(--navy2); padding: 1.25rem 2rem; }
+    .stats-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; }
+    .stat-item { text-align: center; }
+    .stat-value { font-family: var(--mono); font-size: 1.4rem; font-weight: 600; color: #C8A96E; display: block; }
+    .stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; }
+    .stat-divider { width: 1px; background: rgba(255,255,255,0.1); align-self: stretch; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 3rem 1.5rem; }
+    .section:nth-child(even) { background: var(--bg2); }
+    .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+    .section-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.75rem; max-width: 640px; }
+
+    .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .method-card { background: var(--bg); border: 1px solid var(--border); padding: 1.25rem; border-left: 3px solid var(--blue); }
+    .method-card h4 { font-size: 0.82rem; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .method-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+    .method-card code { font-family: var(--mono); font-size: 0.78rem; background: var(--bg3); padding: 0.1rem 0.3rem; color: var(--blue); }
+
+    .chart-box { background: var(--bg); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 0.5rem; }
+    .chart-source { font-size: 0.72rem; color: var(--muted); font-family: var(--mono); text-align: right; padding-top: 0.5rem; }
+
+    .disclaimer { display: inline-flex; align-items: center; gap: 0.5rem; background: #fef3c7; border: 1px solid #d97706; padding: 0.5rem 1rem; margin-bottom: 1.25rem; font-size: 0.8rem; color: #92400e; font-family: var(--mono); }
+
+    .table-controls { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+    .search-input { padding: 0.5rem 1rem; border: 1px solid var(--border); background: var(--bg); font-family: var(--font); font-size: 0.85rem; color: var(--text); outline: none; width: 220px; }
+    .search-input:focus { border-color: var(--blue); }
+    .filter-btn { padding: 0.5rem 1rem; border: 1px solid var(--border); background: var(--bg); font-family: var(--font); font-size: 0.8rem; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+    .filter-btn.active, .filter-btn:hover { background: var(--blue); color: white; border-color: var(--blue); }
+
+    .proj-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .proj-table th { background: var(--navy); color: white; padding: 0.65rem 0.85rem; text-align: left; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; cursor: pointer; user-select: none; white-space: nowrap; }
+    .proj-table th:hover { background: var(--navy2); }
+    .proj-table td { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); color: var(--text); }
+    .proj-table tr:hover td { background: var(--bg2); }
+    .proj-table tr:last-child td { border-bottom: none; }
+
+    .change-pos { color: var(--green); font-weight: 600; font-family: var(--mono); font-size: 0.8rem; }
+    .change-neg { color: var(--red); font-weight: 500; font-family: var(--mono); font-size: 0.8rem; }
+    .ops-val { font-family: var(--mono); font-size: 0.85rem; }
+    .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: var(--navy); color: white; font-size: 0.68rem; font-weight: 600; border-radius: 2px; }
+    .rank-badge.top3 { background: #d97706; }
+
+    .limit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .limit-card { background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 1rem 1.25rem; }
+    .limit-card h4 { font-size: 0.78rem; font-weight: 600; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+    .limit-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+    .page-footer { background: var(--navy); color: rgba(255,255,255,0.4); text-align: center; padding: 1.5rem; font-size: 0.75rem; font-family: var(--mono); }
+
+    @media (max-width: 640px) {
+      .stats-inner { gap: 1rem; }
+      .stat-divider { display: none; }
+      .proj-table { font-size: 0.75rem; }
+      .proj-table th, .proj-table td { padding: 0.4rem 0.5rem; }
+      .proj-table th:nth-child(9), .proj-table td:nth-child(9) { display: none; }
+      .chart-source { font-size: 0.65rem; text-align: left; line-height: 1.4; }
+      .method-grid { grid-template-columns: 1fr; }
+      .limit-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <p class="eyebrow">Portfolio · Predictive Modeling</p>
+  <h1>MLB OPS Prediction Model</h1>
+  <p>Can we predict how well a batter will perform next season? This model uses linear regression to forecast OPS — a key offensive metric — based on a player's recent history, age, and playing time.</p>
+  <div class="model-badges">
+    <span class="badge badge-blue">Python · scikit-learn</span>
+    <span class="badge badge-green">Linear Regression</span>
+    <span class="badge badge-gold">300+ PA · 4 Seasons</span>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><span class="stat-value">0.0734</span><span class="stat-label">RMSE — avg. error in OPS points</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-value">0.209</span><span class="stat-label">R² — variance explained</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-value">1,054</span><span class="stat-label">Player-Seasons</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-value">134</span><span class="stat-label">Training Samples</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-value">5</span><span class="stat-label">Input Features</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-desc">The model learns from 4 seasons of MLB batting data (2022–2025). For each player, it looks at recent performance trends, age trajectory, and playing time to predict next-season OPS. Only players with 300+ plate appearances are included — below that threshold, stats become too noisy to be reliable.</p>
+    <div class="method-grid">
+      <div class="method-card">
+        <h4>What We're Predicting</h4>
+        <p>Next-season <code>OPS</code> (On-base Plus Slugging) — adds how often a player gets on base to how much power they show. A score above .800 is excellent; below .700 is below average.</p>
+      </div>
+      <div class="method-card">
+        <h4>What the Model Uses</h4>
+        <p>Current <code>OPS</code>, 2-season rolling average <code>OPS_avg2</code> (to smooth outlier seasons), next-season age, <code>WAR</code> (overall value), and plate appearances <code>PA</code>.</p>
+      </div>
+      <div class="method-card">
+        <h4>The Algorithm</h4>
+        <p>Linear regression — the simplest predictive model. Trained on 80% of the data, tested on the remaining 20% it has never seen. Measured by RMSE (average error) and R² (explained variance).</p>
+      </div>
+      <div class="method-card">
+        <h4>Data Source</h4>
+        <p>Baseball Reference standard batting stats, seasons 2022–2025. Minimum 300 plate appearances per season to ensure sample size reliability.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Under the Hood — How a Prediction Is Made</h2>
+    <p class="section-desc">Let's walk through exactly how the model predicted Juan Soto's 2025 OPS, step by step. No black box.</p>
+    <div class="method-grid" style="margin-bottom:1.5rem;">
+      <div class="method-card" style="border-left-color:#d97706;">
+        <h4>Step 1 — Gather Inputs</h4>
+        <p>Juan Soto's 2024 season: <code>OPS = 0.921</code>, <code>PA = 715</code>, <code>WAR = 6.1</code>, age in 2025 = <code>26</code>. Rolling 2-season average: <code>OPS_avg2 = 0.884</code> (avg. of 2023 and 2024).</p>
+      </div>
+      <div class="method-card" style="border-left-color:#d97706;">
+        <h4>Step 2 — Apply the Formula</h4>
+        <p>The model learned these weights from the data:<br/>
+        <code>OPS × 0.39</code> + <code>OPS_avg2 × 0.24</code> + <code>Age × −0.003</code> + <code>WAR × 0.006</code> + <code>PA × 0.0001</code> + <code>0.31</code></p>
+      </div>
+      <div class="method-card" style="border-left-color:#d97706;">
+        <h4>Step 3 — Compute</h4>
+        <p><code>(0.921 × 0.39)</code> + <code>(0.884 × 0.24)</code> + <code>(26 × −0.003)</code> + <code>(6.1 × 0.006)</code> + <code>(715 × 0.0001)</code> + <code>0.31</code><br/>= <strong>0.925</strong></p>
+      </div>
+      <div class="method-card" style="border-left-color:#d97706;">
+        <h4>Step 4 — Compare to Reality</h4>
+        <p>Soto's actual 2025 OPS: <code>0.921</code>. The model predicted <code>0.925</code> — an error of just <strong>+0.004</strong>. One of the model's most accurate predictions.</p>
+      </div>
+    </div>
+    <p style="font-size:0.85rem; color:var(--muted); border-left:3px solid var(--border); padding-left:1rem;">Note: current OPS is the strongest predictor (coefficient 0.39), followed by the 2-season average (0.24). Age has a small negative effect (−0.003 per year), consistent with the well-documented aging curve in baseball.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">How Accurate Were the Predictions?</h2>
+    <p class="section-desc">This chart compares what the model predicted to what actually happened — using the 20% of data held back during training (seasons 2023–2025). Each dot is a player-season. The closer a dot is to the diagonal line, the more accurate the prediction. Blue dots = the model overestimated; red dots = the model underestimated. Hover over any dot to see the player details.</p>
+    <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:0.75rem 1rem; margin-bottom:0.75rem; font-size:0.82rem; color:#1e40af; border-left:3px solid var(--blue);">
+      <strong>Why isn't Aaron Judge here?</strong> The model requires at least 3 consecutive qualifying seasons (300+ PA) to compute the rolling average. Judge's injury-shortened seasons break this continuity, so he is excluded from the test set. He appears in the 2026 projections where his full 2025 season provides sufficient data.
+    </div>
+    <div style="background:#fff7ed; border:1px solid #fed7aa; padding:0.75rem 1rem; margin-bottom:1.25rem; font-size:0.82rem; color:#9a3412; border-left:3px solid var(--gold);">
+      <strong>The Brandon Drury outlier.</strong> The most visible error: the model predicted ~0.785, but Drury actually posted 0.469 in 2023. He had a strong 2022 season, but his underlying skills (exit velocity, contact rate) didn't support the surface stats. This is exactly the type of error that Statcast features would help catch.
+    </div>
+    <div class="chart-box">
+      <div id="chart-scatter" style="height:450px;"></div>
+      <div class="chart-source">Source: Baseball Reference (baseball-reference.com) · Model: Linear Regression, scikit-learn · Nathan Brès, 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Is the Model Biased?</h2>
+    <p class="section-desc">This chart shows how the prediction errors are distributed. A good model should make roughly equal numbers of over- and under-predictions — the bars should be roughly symmetric around zero. A systematic lean to one side would mean the model is consistently over- or under-estimating performance.</p>
+    <div class="chart-box">
+      <div id="chart-errors" style="height:380px;"></div>
+      <div class="chart-source">Source: Baseball Reference (baseball-reference.com) · Model: Linear Regression, scikit-learn · Nathan Brès, 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Who's Projected to Shine in 2026?</h2>
+    <p class="section-desc">Using 2025 stats as input, the model projects each player's OPS for 2026. Gold bars = players expected to improve on their 2025 performance. Blue bars = players expected to regress. Note that elite players like Aaron Judge tend to be projected lower than their peak — this is regression to the mean, a well-known statistical phenomenon.</p>
+    <div class="disclaimer">⚠ Analysis as of June 12, 2026 · Projections based on 2025 data · Only players with 300+ PA included</div>
+    <div class="chart-box" style="margin-bottom:2rem;">
+      <div id="chart-proj" style="height:520px;"></div>
+      <div class="chart-source">Source: Baseball Reference (baseball-reference.com) · Model: Linear Regression, scikit-learn · Nathan Brès, 2026</div>
+    </div>
+
+    <h3 style="font-size:1rem; font-weight:600; margin-bottom:0.5rem; color:var(--text);">Full Projections Table — vs. Actual 2026</h3>
+    <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">⬤ Actual 2026 OPS shown where available (150+ PA as of June 12, 2026). Season still in progress.</p>
+    <div class="table-controls">
+      <input class="search-input" id="searchInput" type="text" placeholder="Search player..." />
+      <button class="filter-btn active" onclick="filterTable('all', this)">All</button>
+      <button class="filter-btn" onclick="filterTable('up', this)">↑ Projected Up</button>
+      <button class="filter-btn" onclick="filterTable('down', this)">↓ Projected Down</button>
+      <button class="filter-btn" onclick="filterTable('accurate', this)">✓ Error ≤ 0.050</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="proj-table" id="projTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Player</th>
+            <th>Team</th>
+            <th>Age</th>
+            <th>2025 OPS</th>
+            <th>Proj. 2026</th>
+            <th>Actual 2026</th>
+            <th>Error</th>
+            <th>WAR</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="chart-source" style="margin-top:0.75rem;">Source: Baseball Reference (baseball-reference.com) · Projections: Nathan Brès Linear Regression Model, 2026</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">What This Model Can't Do (Yet)</h2>
+    <p class="section-desc">A model is only as honest as its limitations. Here's what's missing — and what comes next.</p>
+    <div class="limit-grid">
+      <div class="limit-card">
+        <h4>R² of 0.209</h4>
+        <p>The model explains ~21% of the variance in next-season OPS. That sounds low — and it is. But baseball performance is genuinely hard to predict. Professional models (ZiPS, Steamer) reach ~40–50% with far more data.</p>
+      </div>
+      <div class="limit-card">
+        <h4>Small Training Set</h4>
+        <p>Only 134 training samples — players need 3+ qualifying seasons to be included. More historical data (pre-2022) would significantly improve the model's stability.</p>
+      </div>
+      <div class="limit-card">
+        <h4>No Statcast Data</h4>
+        <p>Exit velocity, launch angle, and barrel rate are among the strongest predictors of future performance — they capture "luck-independent" skill. Not yet included here.</p>
+      </div>
+      <div class="limit-card">
+        <h4>No Park Adjustments</h4>
+        <p>A player at Coors Field (hitter-friendly) inflates their OPS significantly vs. a pitcher's park. Without park factors, some projections will be systematically off.</p>
+      </div>
+      <div class="limit-card">
+        <h4>What's Next</h4>
+        <p>Add Statcast features, park factors, platoon splits, and test Ridge/Lasso regularization. Ultimately, build a full projection system comparable to ZiPS or Steamer.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer">
+  Nathan Brès · MLB OPS Prediction Model · Data: Baseball Reference · nathanbres.github.io
+</div>
+
+<script>
+const predictedVsActual = [{"Player":"Luis Arraez","Team":"SDP","Season":2024,"Actual_OPS":0.719,"Predicted_OPS":0.754},{"Player":"Rowdy Tellez","Team":"PIT","Season":2024,"Actual_OPS":0.719,"Predicted_OPS":0.698},{"Player":"Josh Bell","Team":"CLE","Season":2023,"Actual_OPS":0.725,"Predicted_OPS":0.72},{"Player":"Isaac Paredes","Team":"2TM","Season":2024,"Actual_OPS":0.792,"Predicted_OPS":0.766},{"Player":"Lars Nootbaar","Team":"STL","Season":2024,"Actual_OPS":0.686,"Predicted_OPS":0.755},{"Player":"Carlos Santana","Team":"PIT","Season":2023,"Actual_OPS":0.749,"Predicted_OPS":0.704},{"Player":"Manny Machado","Team":"SDP","Season":2024,"Actual_OPS":0.795,"Predicted_OPS":0.791},{"Player":"Josh Naylor","Team":"2TM","Season":2025,"Actual_OPS":0.807,"Predicted_OPS":0.796},{"Player":"Willson Contreras","Team":"STL","Season":2024,"Actual_OPS":0.791,"Predicted_OPS":0.792},{"Player":"Mark Canha","Team":"2TM","Season":2024,"Actual_OPS":0.687,"Predicted_OPS":0.694},{"Player":"Brendan Donovan","Team":"STL","Season":2024,"Actual_OPS":0.775,"Predicted_OPS":0.769},{"Player":"Elias Díaz","Team":"2TM","Season":2024,"Actual_OPS":0.693,"Predicted_OPS":0.685},{"Player":"Brandon Drury","Team":"LAA","Season":2023,"Actual_OPS":0.469,"Predicted_OPS":0.785},{"Player":"Jeremy Peña","Team":"HOU","Season":2024,"Actual_OPS":0.84,"Predicted_OPS":0.733},{"Player":"Byron Buxton","Team":"MIN","Season":2024,"Actual_OPS":0.878,"Predicted_OPS":0.796},{"Player":"Carlos Santana","Team":"2TM","Season":2025,"Actual_OPS":0.65,"Predicted_OPS":0.664},{"Player":"Ramón Laureano","Team":"2TM","Season":2024,"Actual_OPS":0.855,"Predicted_OPS":0.711},{"Player":"Harrison Bader","Team":"NYY","Season":2023,"Actual_OPS":0.657,"Predicted_OPS":0.656},{"Player":"Luis García Jr.","Team":"WSN","Season":2024,"Actual_OPS":0.701,"Predicted_OPS":0.749},{"Player":"Brandon Marsh","Team":"PHI","Season":2023,"Actual_OPS":0.747,"Predicted_OPS":0.768},{"Player":"Jose Altuve","Team":"HOU","Season":2024,"Actual_OPS":0.771,"Predicted_OPS":0.802},{"Player":"Brandon Nimmo","Team":"NYM","Season":2024,"Actual_OPS":0.76,"Predicted_OPS":0.753},{"Player":"Austin Riley","Team":"ATL","Season":2024,"Actual_OPS":0.737,"Predicted_OPS":0.791},{"Player":"Andrew McCutchen","Team":"PIT","Season":2024,"Actual_OPS":0.7,"Predicted_OPS":0.715},{"Player":"Ramón Urías","Team":"BAL","Season":2024,"Actual_OPS":0.675,"Predicted_OPS":0.717},{"Player":"Jorge Soler","Team":"SFG","Season":2024,"Actual_OPS":0.68,"Predicted_OPS":0.742},{"Player":"Riley Greene","Team":"DET","Season":2024,"Actual_OPS":0.806,"Predicted_OPS":0.803},{"Player":"J.P. Crawford","Team":"SEA","Season":2024,"Actual_OPS":0.722,"Predicted_OPS":0.687},{"Player":"Ian Happ","Team":"CHC","Season":2024,"Actual_OPS":0.762,"Predicted_OPS":0.78},{"Player":"Steven Kwan","Team":"CLE","Season":2024,"Actual_OPS":0.705,"Predicted_OPS":0.775},{"Player":"Carlos Santana","Team":"MIN","Season":2024,"Actual_OPS":0.633,"Predicted_OPS":0.727},{"Player":"Ryan O'Hearn","Team":"2TM","Season":2025,"Actual_OPS":0.837,"Predicted_OPS":0.773},{"Player":"Nathaniel Lowe","Team":"2TM","Season":2025,"Actual_OPS":0.665,"Predicted_OPS":0.72},{"Player":"Juan Soto","Team":"NYY","Season":2024,"Actual_OPS":0.921,"Predicted_OPS":0.925}];
+
+const projections2026 = [{"Player":"Aaron Judge","Team":"NYY","Age":33,"OPS":1.144,"OPS_projected_2026":1.021,"OPS_change":-0.123,"OPS_actual_2026":0.907,"PA_2026":261,"prediction_error":0.114,"WAR":9.7},{"Player":"Shohei Ohtani","Team":"LAD","Age":30,"OPS":1.014,"OPS_projected_2026":0.953,"OPS_change":-0.061,"OPS_actual_2026":0.964,"PA_2026":298,"prediction_error":-0.011,"WAR":6.6},{"Player":"Juan Soto","Team":"NYM","Age":26,"OPS":0.921,"OPS_projected_2026":0.898,"OPS_change":-0.023,"OPS_actual_2026":0.906,"PA_2026":218,"prediction_error":-0.008,"WAR":6.1},{"Player":"Cal Raleigh","Team":"SEA","Age":28,"OPS":0.948,"OPS_projected_2026":0.861,"OPS_change":-0.087,"OPS_actual_2026":null,"PA_2026":181,"prediction_error":null,"WAR":7.2},{"Player":"Ronald Acuña Jr.","Team":"ATL","Age":27,"OPS":0.935,"OPS_projected_2026":0.859,"OPS_change":-0.076,"OPS_actual_2026":null,"PA_2026":236,"prediction_error":null,"WAR":3.1},{"Player":"Bobby Witt Jr.","Team":"KCR","Age":25,"OPS":0.852,"OPS_projected_2026":0.856,"OPS_change":0.004,"OPS_actual_2026":0.799,"PA_2026":307,"prediction_error":0.057,"WAR":7.1},{"Player":"Kyle Schwarber","Team":"PHI","Age":32,"OPS":0.928,"OPS_projected_2026":0.855,"OPS_change":-0.073,"OPS_actual_2026":null,"PA_2026":293,"prediction_error":null,"WAR":4.6},{"Player":"Corbin Carroll","Team":"ARI","Age":24,"OPS":0.883,"OPS_projected_2026":0.846,"OPS_change":-0.037,"OPS_actual_2026":null,"PA_2026":277,"prediction_error":null,"WAR":5.8},{"Player":"Ketel Marte","Team":"ARI","Age":31,"OPS":0.893,"OPS_projected_2026":0.844,"OPS_change":-0.049,"OPS_actual_2026":null,"PA_2026":281,"prediction_error":null,"WAR":4.4},{"Player":"Kyle Tucker","Team":"CHC","Age":28,"OPS":0.841,"OPS_projected_2026":0.842,"OPS_change":0.001,"OPS_actual_2026":null,"PA_2026":280,"prediction_error":null,"WAR":4.5},{"Player":"Corey Seager","Team":"TEX","Age":31,"OPS":0.86,"OPS_projected_2026":0.841,"OPS_change":-0.019,"OPS_actual_2026":null,"PA_2026":204,"prediction_error":null,"WAR":6.1},{"Player":"Matt Olson","Team":"ATL","Age":31,"OPS":0.85,"OPS_projected_2026":0.841,"OPS_change":-0.009,"OPS_actual_2026":null,"PA_2026":299,"prediction_error":null,"WAR":6.2},{"Player":"Vladimir Guerrero Jr.","Team":"TOR","Age":26,"OPS":0.848,"OPS_projected_2026":0.837,"OPS_change":-0.011,"OPS_actual_2026":null,"PA_2026":283,"prediction_error":null,"WAR":4.6},{"Player":"Rafael Devers","Team":"2TM","Age":28,"OPS":0.851,"OPS_projected_2026":0.835,"OPS_change":-0.016,"OPS_actual_2026":0.706,"PA_2026":295,"prediction_error":0.129,"WAR":4.3},{"Player":"Freddie Freeman","Team":"LAD","Age":35,"OPS":0.869,"OPS_projected_2026":0.832,"OPS_change":-0.037,"OPS_actual_2026":0.852,"PA_2026":290,"prediction_error":-0.02,"WAR":3.5},{"Player":"José Ramírez","Team":"CLE","Age":32,"OPS":0.863,"OPS_projected_2026":0.832,"OPS_change":-0.031,"OPS_actual_2026":0.765,"PA_2026":307,"prediction_error":0.067,"WAR":5.9},{"Player":"George Springer","Team":"TOR","Age":35,"OPS":0.959,"OPS_projected_2026":0.825,"OPS_change":-0.134,"OPS_actual_2026":null,"PA_2026":206,"prediction_error":null,"WAR":4.8},{"Player":"Pete Alonso","Team":"BAL","Age":30,"OPS":0.871,"OPS_projected_2026":0.822,"OPS_change":-0.049,"OPS_actual_2026":0.775,"PA_2026":303,"prediction_error":0.047,"WAR":3.3},{"Player":"Bryce Harper","Team":"PHI","Age":32,"OPS":0.844,"OPS_projected_2026":0.82,"OPS_change":-0.024,"OPS_actual_2026":null,"PA_2026":282,"prediction_error":null,"WAR":3.1},{"Player":"Will Smith","Team":"LAD","Age":30,"OPS":0.901,"OPS_projected_2026":0.818,"OPS_change":-0.083,"OPS_actual_2026":null,"PA_2026":201,"prediction_error":null,"WAR":4.4},{"Player":"Byron Buxton","Team":"MIN","Age":31,"OPS":0.878,"OPS_projected_2026":0.817,"OPS_change":-0.061,"OPS_actual_2026":null,"PA_2026":261,"prediction_error":null,"WAR":4.9},{"Player":"Geraldo Perdomo","Team":"ARI","Age":25,"OPS":0.851,"OPS_projected_2026":0.816,"OPS_change":-0.035,"OPS_actual_2026":null,"PA_2026":271,"prediction_error":null,"WAR":7.1},{"Player":"Fernando Tatis Jr.","Team":"SDP","Age":26,"OPS":0.814,"OPS_projected_2026":0.813,"OPS_change":-0.001,"OPS_actual_2026":null,"PA_2026":286,"prediction_error":null,"WAR":6.1},{"Player":"Gunnar Henderson","Team":"BAL","Age":24,"OPS":0.787,"OPS_projected_2026":0.813,"OPS_change":0.026,"OPS_actual_2026":0.689,"PA_2026":317,"prediction_error":0.124,"WAR":5.4},{"Player":"Yandy Díaz","Team":"TBR","Age":33,"OPS":0.848,"OPS_projected_2026":0.811,"OPS_change":-0.037,"OPS_actual_2026":0.94,"PA_2026":272,"prediction_error":-0.129,"WAR":3.3},{"Player":"Francisco Lindor","Team":"NYM","Age":31,"OPS":0.811,"OPS_projected_2026":0.808,"OPS_change":-0.003,"OPS_actual_2026":null,"PA_2026":105,"prediction_error":null,"WAR":5.8},{"Player":"Julio Rodríguez","Team":"SEA","Age":24,"OPS":0.798,"OPS_projected_2026":0.807,"OPS_change":0.009,"OPS_actual_2026":0.756,"PA_2026":309,"prediction_error":0.051,"WAR":6.6},{"Player":"Cody Bellinger","Team":"NYY","Age":29,"OPS":0.813,"OPS_projected_2026":0.804,"OPS_change":-0.009,"OPS_actual_2026":0.841,"PA_2026":285,"prediction_error":-0.037,"WAR":5.0},{"Player":"Riley Greene","Team":"DET","Age":24,"OPS":0.806,"OPS_projected_2026":0.801,"OPS_change":-0.005,"OPS_actual_2026":null,"PA_2026":289,"prediction_error":null,"WAR":2.2},{"Player":"Mike Trout","Team":"LAA","Age":33,"OPS":0.797,"OPS_projected_2026":0.798,"OPS_change":0.001,"OPS_actual_2026":0.843,"PA_2026":307,"prediction_error":-0.045,"WAR":1.7},{"Player":"Trea Turner","Team":"PHI","Age":32,"OPS":0.812,"OPS_projected_2026":0.792,"OPS_change":-0.02,"OPS_actual_2026":null,"PA_2026":296,"prediction_error":null,"WAR":5.4},{"Player":"Mookie Betts","Team":"LAD","Age":32,"OPS":0.732,"OPS_projected_2026":0.787,"OPS_change":0.055,"OPS_actual_2026":null,"PA_2026":149,"prediction_error":null,"WAR":4.9},{"Player":"Elly De La Cruz","Team":"CIN","Age":23,"OPS":0.777,"OPS_projected_2026":0.786,"OPS_change":0.009,"OPS_actual_2026":null,"PA_2026":257,"prediction_error":null,"WAR":3.6},{"Player":"Bo Bichette","Team":"TOR","Age":27,"OPS":0.84,"OPS_projected_2026":0.788,"OPS_change":-0.052,"OPS_actual_2026":null,"PA_2026":296,"prediction_error":null,"WAR":3.4},{"Player":"Jazz Chisholm Jr.","Team":"NYY","Age":27,"OPS":0.813,"OPS_projected_2026":0.782,"OPS_change":-0.031,"OPS_actual_2026":null,"PA_2026":262,"prediction_error":null,"WAR":4.1},{"Player":"Manny Machado","Team":"SDP","Age":32,"OPS":0.795,"OPS_projected_2026":0.782,"OPS_change":-0.013,"OPS_actual_2026":0.597,"PA_2026":270,"prediction_error":0.185,"WAR":4.2},{"Player":"William Contreras","Team":"MIL","Age":27,"OPS":0.754,"OPS_projected_2026":0.781,"OPS_change":0.027,"OPS_actual_2026":null,"PA_2026":274,"prediction_error":null,"WAR":3.8},{"Player":"Zach Neto","Team":"LAA","Age":24,"OPS":0.793,"OPS_projected_2026":0.78,"OPS_change":-0.013,"OPS_actual_2026":0.78,"PA_2026":302,"prediction_error":0.0,"WAR":5.3},{"Player":"Jarren Duran","Team":"BOS","Age":28,"OPS":0.774,"OPS_projected_2026":0.794,"OPS_change":0.02,"OPS_actual_2026":null,"PA_2026":271,"prediction_error":null,"WAR":4.9},{"Player":"Randy Arozarena","Team":"SEA","Age":30,"OPS":0.76,"OPS_projected_2026":0.755,"OPS_change":-0.005,"OPS_actual_2026":0.825,"PA_2026":300,"prediction_error":-0.07,"WAR":3.9},{"Player":"Nico Hoerner","Team":"CHC","Age":28,"OPS":0.739,"OPS_projected_2026":0.755,"OPS_change":0.016,"OPS_actual_2026":0.675,"PA_2026":308,"prediction_error":0.08,"WAR":6.2},{"Player":"Alex Bregman","Team":"CHC","Age":32,"OPS":0.685,"OPS_projected_2026":0.703,"OPS_change":0.018,"OPS_actual_2026":0.685,"PA_2026":310,"prediction_error":0.018,"WAR":1.6}];
+
+const top20 = projections2026.slice(0, 20);
+
+// Chart 1: Scatter
+const errors = predictedVsActual.map(d => d.Predicted_OPS - d.Actual_OPS);
+const colors = errors.map(e => e > 0 ? '#2563eb' : '#dc2626');
+const allOPS = predictedVsActual.flatMap(d => [d.Actual_OPS, d.Predicted_OPS]);
+const opsMin = Math.min(...allOPS) - 0.02;
+const opsMax = Math.max(...allOPS) + 0.02;
+
+Plotly.newPlot('chart-scatter', [{
+  x: predictedVsActual.map(d => d.Actual_OPS),
+  y: predictedVsActual.map(d => d.Predicted_OPS),
+  mode: 'markers', type: 'scatter',
+  marker: { color: colors, size: 9, opacity: 0.85, line: { color: 'white', width: 1 } },
+  text: predictedVsActual.map(d => `<b>${d.Player}</b><br>Team: ${d.Team} · ${d.Season}<br>Actual OPS: ${d.Actual_OPS}<br>Predicted OPS: ${d.Predicted_OPS}<br>Error: ${(d.Predicted_OPS - d.Actual_OPS).toFixed(3)}`),
+  hovertemplate: '%{text}<extra></extra>', name: 'Players'
+}, {
+  x: [opsMin, opsMax], y: [opsMin, opsMax], mode: 'lines', type: 'scatter',
+  line: { color: '#94a3b8', dash: 'dash', width: 1.5 },
+  name: 'Perfect prediction', hoverinfo: 'skip'
+}], {
+  xaxis: { title: 'Actual OPS', tickfont: { size: 11 }, gridcolor: '#f1f5f9', range: [opsMin, opsMax] },
+  yaxis: { title: 'Predicted OPS', tickfont: { size: 11 }, gridcolor: '#f1f5f9', range: [opsMin, opsMax] },
+  plot_bgcolor: '#ffffff', paper_bgcolor: '#ffffff',
+  legend: { orientation: 'h', y: -0.15 },
+  margin: { t: 20, r: 20, b: 60, l: 60 },
+  annotations: [{ x: 0.02, y: 0.98, xref: 'paper', yref: 'paper', text: 'Blue = over-predicted · Red = under-predicted', showarrow: false, font: { size: 11, color: '#64748b' }, align: 'left' }]
+}, { responsive: true, displayModeBar: false });
+
+// Chart 2: Error histogram
+Plotly.newPlot('chart-errors', [{
+  x: predictedVsActual.map(d => +(d.Predicted_OPS - d.Actual_OPS).toFixed(3)),
+  type: 'histogram', nbinsx: 18,
+  marker: { color: '#2563eb', opacity: 0.8, line: { color: 'white', width: 1 } },
+  name: 'Prediction errors'
+}, {
+  x: [0, 0], y: [0, 6], mode: 'lines', type: 'scatter',
+  line: { color: '#dc2626', dash: 'dash', width: 2 },
+  name: 'Zero error', hoverinfo: 'skip'
+}], {
+  xaxis: { title: 'Prediction Error (Predicted − Actual OPS)', tickfont: { size: 11 }, gridcolor: '#f1f5f9', zeroline: false },
+  yaxis: { title: 'Count', tickfont: { size: 11 }, gridcolor: '#f1f5f9' },
+  plot_bgcolor: '#ffffff', paper_bgcolor: '#ffffff',
+  legend: { orientation: 'h', y: -0.18 },
+  margin: { t: 20, r: 20, b: 60, l: 55 }
+}, { responsive: true, displayModeBar: false });
+
+// Chart 3: Projections
+const isMobile = window.innerWidth < 640;
+const top20Rev = [...top20].reverse();
+
+Plotly.newPlot('chart-proj', [{
+  y: top20Rev.map(d => d.Player),
+  x: top20Rev.map(d => d.OPS_projected_2026),
+  type: 'bar', orientation: 'h',
+  marker: { color: top20Rev.map(d => d.OPS_change >= 0 ? '#d97706' : '#2563eb'), opacity: 0.85 },
+  text: top20Rev.map(d => d.OPS_projected_2026.toFixed(3)),
+  textposition: isMobile ? 'inside' : 'outside',
+  textfont: { size: 10, color: isMobile ? 'white' : '#1a1f2e' },
+  hovertemplate: '<b>%{y}</b><br>Projected 2026 OPS: %{x:.3f}<extra></extra>'
+}], {
+  xaxis: { title: 'Projected 2026 OPS', tickfont: { size: 11 }, gridcolor: '#f1f5f9', range: [0, isMobile ? 1.15 : 1.1] },
+  yaxis: { tickfont: { size: isMobile ? 10 : 11 }, automargin: true },
+  plot_bgcolor: '#ffffff', paper_bgcolor: '#ffffff',
+  margin: { t: 20, r: isMobile ? 10 : 70, b: 50, l: isMobile ? 120 : 180 },
+  annotations: isMobile ? [] : [{ x: 0.5, y: 1.04, xref: 'paper', yref: 'paper', text: 'Gold = improvement expected · Blue = regression expected', showarrow: false, font: { size: 10, color: '#64748b' }, align: 'center' }]
+}, { responsive: true, displayModeBar: false });
+
+// Table
+let currentFilter = 'all', currentSearch = '';
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  data.forEach((d, i) => {
+    const hasActual = d.OPS_actual_2026 !== null && d.OPS_actual_2026 !== undefined;
+    const inProgress = !hasActual;
+    const error = hasActual ? d.prediction_error : null;
+    const errorStr = error !== null ? (error >= 0 ? '+' : '') + error.toFixed(3) : '—';
+    const errorClass = error === null ? '' : error >= 0 ? 'change-neg' : 'change-pos';
+    const actualStr = hasActual ? d.OPS_actual_2026.toFixed(3) : '<span style="color:#94a3b8;font-size:0.75rem;">In progress</span>';
+    tbody.innerHTML += `<tr>
+      <td><span class="${i < 3 ? 'rank-badge top3' : 'rank-badge'}">${i + 1}</span></td>
+      <td><strong>${d.Player}</strong></td>
+      <td>${d.Team}</td>
+      <td>${d.Age}</td>
+      <td class="ops-val">${d.OPS.toFixed(3)}</td>
+      <td class="ops-val"><strong>${d.OPS_projected_2026.toFixed(3)}</strong></td>
+      <td class="ops-val">${actualStr}</td>
+      <td class="${errorClass}" style="font-family:var(--mono);font-size:0.8rem;">${errorStr}</td>
+      <td>${d.WAR.toFixed(1)}</td>
+    </tr>`;
+  });
+}
+
+function applyFilters() {
+  let filtered = [...projections2026];
+  if (currentFilter === 'up') filtered = filtered.filter(d => d.OPS_change >= 0);
+  if (currentFilter === 'down') filtered = filtered.filter(d => d.OPS_change < 0);
+  if (currentFilter === 'accurate') filtered = filtered.filter(d => d.prediction_error !== null && Math.abs(d.prediction_error) <= 0.05);
+  if (currentSearch) filtered = filtered.filter(d => d.Player.toLowerCase().includes(currentSearch.toLowerCase()));
+  renderTable(filtered);
+}
+
+function filterTable(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  currentSearch = e.target.value;
+  applyFilters();
+});
+
+renderTable(projections2026);
+</script>
+</body>
+</html>
