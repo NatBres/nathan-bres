@@ -1,4 +1,4 @@
-# Nathan Guérineau — Personal Portfolio
+# Nathan Bres — Personal Portfolio
 
 A professional one-page portfolio site for sports & data analytics, hosted on GitHub Pages.
 
@@ -42,7 +42,7 @@ portfolio/
 ## Customization Checklist
 
 ### Before going live:
-- [ ] Replace `Nathan Guérineau` with your actual full name in `index.html`
+- [ ] Replace `Nathan Bres` with your actual full name in `index.html`
 - [ ] Update the hero tagline if desired
 - [ ] Add your photo to `img/` and link it in the About section
 - [ ] Update GitHub and LinkedIn URLs in the Contact section
