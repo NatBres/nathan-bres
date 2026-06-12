@@ -239,11 +239,15 @@ section { padding: 6rem 2rem; width: 100%; text-align: center; }
   position: relative;
   overflow: hidden;
 }
+.card-thumb--lineup {
+  background-image: url('../img/lineup-thumb.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0a0d14;
+}
 .card-thumb--ops {
   background: linear-gradient(135deg, #1e3a5f 0%, #0f2535 100%);
-  background-image: url('../img/ops-thumb.png');
-  background-size: cover;
-  background-position: center;
 }
   background-image: url('../img/lineup-thumb.png');
   background-size: contain;
