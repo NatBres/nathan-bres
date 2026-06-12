@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nathan Brès — Sports & Data Analytics</title>
+  <meta name="description" content="Data Analyst specializing in sports analytics, financial markets, and statistical modeling." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,600;1,300&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">N<span class="dot">.</span></a>
+      <ul class="nav-links">
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="diamond-bg" aria-hidden="true">
+      <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="400,60 640,250 400,440 160,250" fill="none" stroke="rgba(200,169,110,0.07)" stroke-width="1.5"/>
+        <polygon points="400,90 610,250 400,410 190,250" fill="none" stroke="rgba(200,169,110,0.05)" stroke-width="1"/>
+        <polygon points="400,120 580,250 400,380 220,250" fill="none" stroke="rgba(200,169,110,0.04)" stroke-width="1"/>
+        <line x1="400" y1="60" x2="400" y2="440" stroke="rgba(200,169,110,0.04)" stroke-width="1"/>
+        <line x1="160" y1="250" x2="640" y2="250" stroke="rgba(200,169,110,0.04)" stroke-width="1"/>
+        <circle cx="400" cy="60" r="4" fill="rgba(200,169,110,0.15)"/>
+        <circle cx="640" cy="250" r="4" fill="rgba(200,169,110,0.15)"/>
+        <circle cx="400" cy="440" r="4" fill="rgba(200,169,110,0.15)"/>
+        <circle cx="160" cy="250" r="4" fill="rgba(200,169,110,0.15)"/>
+        <circle cx="400" cy="250" r="3" fill="rgba(200,169,110,0.2)"/>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Data Analytics · Sports · Financial Markets</p>
+      <h1 class="hero-name">Nathan<br/><span class="hero-surname">Brès</span></h1>
+      <p class="hero-tagline">Turning raw data into competitive advantage —<br/>from the trading floor to the ballpark.</p>
+      <div class="hero-cta">
+        <a href="#portfolio" class="btn-primary">View Portfolio</a>
+        <a href="#contact" class="btn-ghost">Get in Touch</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-label">Work</span>
+        <h2>Portfolio</h2>
+        <p class="section-subtitle">Statistical analyses, models, and projects at the intersection of sports and data science.</p>
+      </div>
+
+      <div class="portfolio-grid">
+
+        <!-- Card 1 — The Lineup -->
+        <div class="port-card" data-modal="modal-lineup">
+          <div class="card-thumb card-thumb--lineup">
+            <span class="card-tag">Web App</span>
+          </div>
+          <div class="card-body">
+            <h3>The Lineup</h3>
+            <p>Mobile-first MLB draft simulation engine with multilingual support, Supabase leaderboard, and PA outcome modeling.</p>
+            <span class="card-cta">View project →</span>
+          </div>
+        </div>
+
+        <!-- Card 2 — Placeholder: Pitcher Analysis -->
+        <div class="port-card" data-modal="modal-pitcher">
+          <div class="card-thumb card-thumb--pitcher">
+            <span class="card-tag">Statistical Analysis</span>
+          </div>
+          <div class="card-body">
+            <h3>Pitcher Performance Modeling</h3>
+            <p>xFIP, SIERA, and Stuff+ analysis across MLB starters — identifying regression candidates and breakout profiles.</p>
+            <span class="card-cta">View project →</span>
+          </div>
+        </div>
+
+        <!-- Card 3 — Placeholder: International Scouting -->
+        <div class="port-card" data-modal="modal-intl">
+          <div class="card-thumb card-thumb--intl">
+            <span class="card-tag">Scouting Analytics</span>
+          </div>
+          <div class="card-body">
+            <h3>International Prospect Evaluation</h3>
+            <p>Comparative framework for evaluating amateur international talent using historical signing data and performance translation models.</p>
+            <span class="card-cta">View project →</span>
+          </div>
+        </div>
+
+        <!-- Card 4 — Placeholder: Lineup Optimization -->
+        <div class="port-card" data-modal="modal-lineup-opt">
+          <div class="card-thumb card-thumb--lineup-opt">
+            <span class="card-tag">Optimization</span>
+          </div>
+          <div class="card-body">
+            <h3>Lineup Optimization Model</h3>
+            <p>Markov chain-based run expectancy model for optimal batting order construction, tested across a full 162-game season simulation.</p>
+            <span class="card-cta">View project →</span>
+          </div>
+        </div>
+
+        <!-- Card 5 — Placeholder: Financial -->
+        <div class="port-card" data-modal="modal-financial">
+          <div class="card-thumb card-thumb--financial">
+            <span class="card-tag">Financial Analytics</span>
+          </div>
+          <div class="card-body">
+            <h3>Sports Asset Valuation</h3>
+            <p>Applying financial markets methodology to MLB player contract valuation — WAR-to-dollar conversion and surplus value framework.</p>
+            <span class="card-cta">View project →</span>
+          </div>
+        </div>
+
+        <!-- Card 6 — Placeholder: Draft Model -->
+        <div class="port-card" data-modal="modal-draft">
+          <div class="card-thumb card-thumb--draft">
+            <span class="card-tag">Predictive Modeling</span>
+          </div>
+          <div class="card-body">
+            <h3>MLB Draft Success Predictor</h3>
+            <p>Machine learning model predicting MLB debut probability from amateur scouting grades, school tier, and regional performance data.</p>
+            <span class="card-cta">View project →</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner about-inner">
+      <div class="about-left">
+        <div class="section-header">
+          <span class="section-label">Background</span>
+          <h2>About</h2>
+        </div>
+        <div class="about-photo-wrap">
+          <img src="img/profile.png" alt="Nathan Brès" class="about-photo" />
+        </div>
+        <p class="about-bio">
+          I'm a data analyst based in Dublin, Ireland, working at <strong>Amundi</strong> — one of Europe's largest asset managers. My work sits at the intersection of quantitative analysis and business insight, with a deep focus on sports analytics.
+        </p>
+        <p class="about-bio">
+          I hold a <strong>Master's in Financial Markets</strong> and a <strong>Sports Performance Analytics Certification</strong> from the University of Michigan. I'm trilingual in French, English, and Spanish — an asset I've built into every analytics project I pursue.
+        </p>
+        <p class="about-bio">
+          My goal is to bring the rigor of financial modeling to baseball operations, contributing to player evaluation, roster construction, and performance science at the highest level.
+        </p>
+        <a href="#" class="btn-primary" id="resume-btn">Download Resume</a>
+      </div>
+
+      <div class="about-right">
+        <div class="about-block">
+          <h4>Technical Stack</h4>
+          <ul class="skill-list">
+            <li><span class="skill-dot"></span>Python — NumPy, Pandas, SciPy, Statsmodels</li>
+            <li><span class="skill-dot"></span>R — ggplot2, tidyverse, statistical modeling</li>
+            <li><span class="skill-dot"></span>SQL · VBA · JavaScript</li>
+            <li><span class="skill-dot"></span>Data Visualization — Matplotlib, Seaborn, D3</li>
+          </ul>
+        </div>
+
+        <div class="about-block">
+          <h4>Interests</h4>
+          <ul class="skill-list">
+            <li><span class="skill-dot"></span>Baseball Operations &amp; Sabermetrics</li>
+            <li><span class="skill-dot"></span>Sports Performance Science</li>
+            <li><span class="skill-dot"></span>International Scouting Analytics</li>
+            <li><span class="skill-dot"></span>Athletics &amp; Cross-Country</li>
+          </ul>
+        </div>
+
+        <div class="about-block">
+          <h4>Languages</h4>
+          <div class="lang-grid">
+            <div class="lang-item"><span class="lang-flag">🇫🇷</span><span>French</span><span class="lang-level">Native</span></div>
+            <div class="lang-item"><span class="lang-flag">🇬🇧</span><span>English</span><span class="lang-level">Fluent</span></div>
+            <div class="lang-item"><span class="lang-flag">🇪🇸</span><span>Spanish</span><span class="lang-level">Intermediate</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner contact-inner">
+      <div class="section-header">
+        <span class="section-label">Say hello</span>
+        <h2>Contact</h2>
+        <p class="section-subtitle">Open to opportunities in baseball operations and sports analytics. Let's talk.</p>
+      </div>
+
+      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="What's on your mind?" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Send Message</button>
+      </form>
+
+      <div class="contact-links">
+        <a href="https://github.com/" target="_blank" rel="noopener" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.25 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.21.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="https://www.linkedin.com/in/nathan-br%C3%A8s/" target="_blank" rel="noopener" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://the-lineup-nu.vercel.app" target="_blank" rel="noopener" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          The Lineup
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Nathan Brès · Built with intention, deployed on GitHub Pages.</p>
+  </footer>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="modal-overlay" aria-hidden="true">
+
+    <div class="modal" id="modal-lineup" role="dialog" aria-labelledby="modal-lineup-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <div class="modal-header">
+        <span class="modal-tag">Web App · React / Vite / Supabase</span>
+        <h3 id="modal-lineup-title">The Lineup</h3>
+      </div>
+      <div class="modal-body">
+        <p>A free, mobile-first MLB draft and team simulation web app built solo from scratch. Users draft a 26-man roster, simulate a full season via a PA outcome model calibrated on real OBP/SLG/AVG distributions, and compete on a global leaderboard.</p>
+        <ul class="modal-features">
+          <li>Draft engine with position-aware logic and 700+ real MLB players</li>
+          <li>Simulation model based on empirical plate appearance outcomes</li>
+          <li>Multilingual support (EN / FR / ES) — matching the international baseball landscape</li>
+          <li>Supabase leaderboard, Formspree contact, Google Analytics integration</li>
+          <li>Personal Hall of Fame via localStorage</li>
+        </ul>
+        <div class="modal-meta">
+          <span><strong>Stack:</strong> React, Vite, JavaScript, Supabase</span>
+          <span><strong>Year:</strong> 2024–2025</span>
+        </div>
+        <a href="https://the-lineup-nu.vercel.app" target="_blank" class="btn-primary modal-btn">Live App →</a>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-pitcher" role="dialog" aria-labelledby="modal-pitcher-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <div class="modal-header">
+        <span class="modal-tag">Statistical Analysis · Python / R</span>
+        <h3 id="modal-pitcher-title">Pitcher Performance Modeling</h3>
+      </div>
+      <div class="modal-body">
+        <p class="modal-wip">🔧 Analysis in progress — check back soon.</p>
+        <p>This project will examine the predictive validity of ERA estimators (xFIP, SIERA, Stuff+) across a multi-year MLB dataset, identifying pitchers likely to over- or under-perform their surface ERA.</p>
+        <div class="modal-meta">
+          <span><strong>Stack:</strong> Python, Pandas, Statsmodels, Seaborn</span>
+          <span><strong>Data:</strong> FanGraphs, Baseball Savant</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-intl" role="dialog" aria-labelledby="modal-intl-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <div class="modal-header">
+        <span class="modal-tag">Scouting Analytics · Python</span>
+        <h3 id="modal-intl-title">International Prospect Evaluation</h3>
+      </div>
+      <div class="modal-body">
+        <p class="modal-wip">🔧 Analysis in progress — check back soon.</p>
+        <p>A framework for systematically evaluating international amateur prospects using historical IFA signing data, debut timelines, and performance translation coefficients across leagues.</p>
+        <div class="modal-meta">
+          <span><strong>Stack:</strong> Python, SQL, Matplotlib</span>
+          <span><strong>Data:</strong> Baseball Reference, IFA historical records</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-lineup-opt" role="dialog" aria-labelledby="modal-lineup-opt-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <div class="modal-header">
+        <span class="modal-tag">Optimization · Python</span>
+        <h3 id="modal-lineup-opt-title">Lineup Optimization Model</h3>
+      </div>
+      <div class="modal-body">
+        <p class="modal-wip">🔧 Analysis in progress — check back soon.</p>
+        <p>A Markov chain run expectancy model evaluating batting order configurations. Tested across simulated 162-game seasons to quantify the marginal value of optimal lineup construction.</p>
+        <div class="modal-meta">
+          <span><strong>Stack:</strong> Python, NumPy, SciPy</span>
+          <span><strong>Method:</strong> Markov Chain, Monte Carlo Simulation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-financial" role="dialog" aria-labelledby="modal-financial-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <div class="modal-header">
+        <span class="modal-tag">Financial Analytics · Python / R</span>
+        <h3 id="modal-financial-title">Sports Asset Valuation</h3>
+      </div>
+      <div class="modal-body">
+        <p class="modal-wip">🔧 Analysis in progress — check back soon.</p>
+        <p>Applying quantitative finance frameworks (DCF, surplus value models) to MLB player contract valuation. Maps WAR projections to dollar value using market-rate $/WAR estimates.</p>
+        <div class="modal-meta">
+          <span><strong>Stack:</strong> Python, R, Excel</span>
+          <span><strong>Concepts:</strong> DCF, Surplus Value, WAR Forecasting</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="modal-draft" role="dialog" aria-labelledby="modal-draft-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <div class="modal-header">
+        <span class="modal-tag">Predictive Modeling · Python</span>
+        <h3 id="modal-draft-title">MLB Draft Success Predictor</h3>
+      </div>
+      <div class="modal-body">
+        <p class="modal-wip">🔧 Analysis in progress — check back soon.</p>
+        <p>A classification model predicting MLB debut probability from draft-day inputs: scouting grades, school type, regional performance, and draft round. Trained on 10+ years of draft history.</p>
+        <div class="modal-meta">
+          <span><strong>Stack:</strong> Python, scikit-learn, Pandas</span>
+          <span><strong>Method:</strong> Gradient Boosting, Logistic Regression</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end modal overlay -->
+
+  <script src="js/main.js"></script>
+</body>
+</html>
