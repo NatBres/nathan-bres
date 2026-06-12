@@ -33,11 +33,20 @@ function closeAllModals() {
 }
 
 cards.forEach(card => {
-  card.addEventListener('click', () => openModal(card.dataset.modal));
+  card.addEventListener('click', () => {
+    if (card.dataset.url) {
+      window.open(card.dataset.url, '_blank');
+    } else {
+      openModal(card.dataset.modal);
+    }
+  });
   card.setAttribute('tabindex', '0');
   card.setAttribute('role', 'button');
   card.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') openModal(card.dataset.modal);
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (card.dataset.url) window.open(card.dataset.url, '_blank');
+      else openModal(card.dataset.modal);
+    }
   });
 });
 

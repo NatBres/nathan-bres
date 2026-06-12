@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPS Prediction Model — Nathan Brès</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg2: #f8f9fc;
+      --bg3: #f0f2f8;
+      --navy: #0A1628;
+      --navy2: #1a2e4a;
+      --text: #1a1f2e;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --blue: #2563eb;
+      --blue-light: #dbeafe;
+      --green: #16a34a;
+      --green-light: #dcfce7;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --gold: #d97706;
+      --gold-light: #fef3c7;
+      --font: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    .page-header {
+      background: var(--navy);
+      color: white;
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+    }
+    .page-header .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #C8A96E;
+      margin-bottom: 0.75rem;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .page-header p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+    }
+    .model-badges {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 2px;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+    .badge-blue  { background: rgba(37,99,235,0.2); color: #93c5fd; border: 1px solid rgba(37,99,235,0.3); }
+    .badge-green { background: rgba(22,163,74,0.2); color: #86efac; border: 1px solid rgba(22,163,74,0.3); }
+    .badge-gold  { background: rgba(200,169,110,0.15); color: #C8A96E; border: 1px solid rgba(200,169,110,0.3); }
+
+    /* ── Layout ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      background: var(--navy2);
+      padding: 1.25rem 2rem;
+    }
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #C8A96E;
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,0.1);
+      align-self: stretch;
+    }
+
+    /* ── Sections ── */
+    .section {
+      padding: 3rem 1.5rem;
+    }
+    .section:nth-child(even) { background: var(--bg2); }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+    .section-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.75rem;
+      max-width: 640px;
+    }
+
+    /* ── Methodology ── */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .method-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      border-left: 3px solid var(--blue);
+    }
+    .method-card h4 {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .method-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .method-card code {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      background: var(--bg3);
+      padding: 0.1rem 0.3rem;
+      color: var(--blue);
+    }
+
+    /* ── Chart containers ── */
+    .chart-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .chart-source {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      text-align: right;
+      padding-top: 0.5rem;
+    }
+
+    /* ── Table ── */
+    .table-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .search-input {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-family: var(--font);
+      font-size: 0.85rem;
+      color: var(--text);
+      outline: none;
+      width: 220px;
+    }
+    .search-input:focus { border-color: var(--blue); }
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-family: var(--font);
+      font-size: 0.8rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    .proj-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .proj-table th {
+      background: var(--navy);
+      color: white;
+      padding: 0.65rem 0.85rem;
+      text-align: left;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .proj-table th:hover { background: var(--navy2); }
+    .proj-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .proj-table tr:hover td { background: var(--bg2); }
+    .proj-table tr:last-child td { border-bottom: none; }
+
+    .change-pos { color: var(--green); font-weight: 600; font-family: var(--mono); font-size: 0.8rem; }
+    .change-neg { color: var(--red); font-weight: 500; font-family: var(--mono); font-size: 0.8rem; }
+    .ops-val { font-family: var(--mono); font-size: 0.85rem; }
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--navy);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 600;
+      border-radius: 2px;
+    }
+    .rank-badge.top3 { background: #d97706; }
+
+    /* ── Limitations ── */
+    .limit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .limit-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      padding: 1rem 1.25rem;
+    }
+    .limit-card h4 {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .limit-card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      background: var(--navy);
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.75rem;
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 640px) {
+      .stats-inner { gap: 1rem; }
+      .stat-divider { display: none; }
+      .proj-table { font-size: 0.78rem; }
+      .proj-table th, .proj-table td { padding: 0.5rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="page-header">
+  <p class="eyebrow">Portfolio · Predictive Modeling</p>
+  <h1>MLB OPS Prediction Model</h1>
+  <p>A linear regression model projecting next-season OPS for MLB batters, built on 5 seasons of historical data (2022–2026).</p>
+  <div class="model-badges">
+    <span class="badge badge-blue">Python · scikit-learn</span>
+    <span class="badge badge-green">Linear Regression</span>
+    <span class="badge badge-gold">300+ PA · 5 Seasons</span>
+  </div>
+</div>
+
+<!-- ── Stats bar ── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <span class="stat-value">0.0566</span>
+      <span class="stat-label">RMSE</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">0.206</span>
+      <span class="stat-label">R²</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">1,215</span>
+      <span class="stat-label">Player-Seasons</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">178</span>
+      <span class="stat-label">Training Samples</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">5</span>
+      <span class="stat-label">Features</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Methodology ── -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Methodology</h2>
+    <p class="section-desc">The model predicts a player's OPS for the following season using five engineered features derived from their batting history. Only players with 300+ plate appearances are included to ensure statistical reliability.</p>
+    <div class="method-grid">
+      <div class="method-card">
+        <h4>Target Variable</h4>
+        <p>Next-season <code>OPS</code> (On-base Plus Slugging) — the primary measure of overall offensive production.</p>
+      </div>
+      <div class="method-card">
+        <h4>Key Features</h4>
+        <p>Current <code>OPS</code>, 2-season rolling average <code>OPS_avg2</code>, next-season age, <code>WAR</code>, and plate appearances <code>PA</code>.</p>
+      </div>
+      <div class="method-card">
+        <h4>Model</h4>
+        <p>Ordinary Least Squares linear regression with an 80/20 train-test split. Evaluated on RMSE and R².</p>
+      </div>
+      <div class="method-card">
+        <h4>Data</h4>
+        <p>Baseball Reference standard batting stats, seasons 2022–2026. Minimum 300 PA per season.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Chart 1: Predicted vs Actual ── -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Predicted vs. Actual OPS</h2>
+    <p class="section-desc">Each point represents a player-season from the test set. Points along the diagonal line indicate perfect predictions. Hover to see player details.</p>
+    <div class="chart-box">
+      <div id="chart-scatter" style="height:450px;"></div>
+      <div class="chart-source">Source: Baseball Reference (baseball-reference.com) · Model: Linear Regression, scikit-learn · Nathan Brès, 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Chart 2: Error distribution ── -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Prediction Error Distribution</h2>
+    <p class="section-desc">Distribution of prediction errors (Predicted − Actual OPS). A distribution centered around zero indicates an unbiased model — it doesn't systematically over- or under-predict.</p>
+    <div class="chart-box">
+      <div id="chart-errors" style="height:380px;"></div>
+      <div class="chart-source">Source: Baseball Reference (baseball-reference.com) · Model: Linear Regression, scikit-learn · Nathan Brès, 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Chart 3 + Table: 2027 Projections ── -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">2027 OPS Projections</h2>
+    <p class="section-desc">Projected OPS for the 2027 season based on 2026 performance. Gold bars indicate players expected to improve relative to their 2026 OPS.</p>
+    <div class="chart-box" style="margin-bottom:2rem;">
+      <div id="chart-proj" style="height:480px;"></div>
+      <div class="chart-source">Source: Baseball Reference (baseball-reference.com) · Model: Linear Regression, scikit-learn · Nathan Brès, 2026</div>
+    </div>
+
+    <h3 style="font-size:1rem; font-weight:600; margin-bottom:1rem; color:var(--text);">Full Projections Table</h3>
+    <div class="table-controls">
+      <input class="search-input" id="searchInput" type="text" placeholder="Search player..." />
+      <button class="filter-btn active" onclick="filterTable('all', this)">All</button>
+      <button class="filter-btn" onclick="filterTable('up', this)">↑ Projected Up</button>
+      <button class="filter-btn" onclick="filterTable('down', this)">↓ Projected Down</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="proj-table" id="projTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">#</th>
+            <th onclick="sortTable(1)">Player</th>
+            <th onclick="sortTable(2)">Team</th>
+            <th onclick="sortTable(3)">Age</th>
+            <th onclick="sortTable(4)">2026 OPS</th>
+            <th onclick="sortTable(5)">Proj. 2027 OPS</th>
+            <th onclick="sortTable(6)">Change</th>
+            <th onclick="sortTable(7)">WAR</th>
+            <th onclick="sortTable(8)">PA</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="chart-source" style="margin-top:0.75rem;">Source: Baseball Reference (baseball-reference.com) · Projections: Nathan Brès Linear Regression Model, 2026</div>
+  </div>
+</div>
+
+<!-- ── Limitations ── -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Model Limitations & Next Steps</h2>
+    <p class="section-desc">This is a baseline model. Understanding its limits is as important as its predictions.</p>
+    <div class="limit-grid">
+      <div class="limit-card">
+        <h4>Low R² (0.206)</h4>
+        <p>The model explains ~20% of variance. Professional models (ZiPS, Steamer) reach 40–50% using many more features.</p>
+      </div>
+      <div class="limit-card">
+        <h4>Small Sample</h4>
+        <p>Only 178 training samples after requiring 3+ seasons of data. More historical data would improve reliability.</p>
+      </div>
+      <div class="limit-card">
+        <h4>No Statcast</h4>
+        <p>Exit velocity, launch angle, and barrel rate are strong predictors not yet included in this model.</p>
+      </div>
+      <div class="limit-card">
+        <h4>No Park Factor</h4>
+        <p>Ballpark effects significantly impact OPS. A Coors Field hitter vs. a pitcher's park hitter need adjustment.</p>
+      </div>
+      <div class="limit-card">
+        <h4>Next Steps</h4>
+        <p>Add Statcast features, park factors, platoon splits, and test Ridge/Lasso regularization to reduce overfitting.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer">
+  Nathan Brès · MLB OPS Prediction Model · Data: Baseball Reference · nathanbres.github.io
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────
+const predictedVsActual = [{"Player":"Brandon Marsh","Team":"PHI","Season":2024,"Actual_OPS":0.785,"Predicted_OPS":0.748},{"Player":"Eugenio Suárez","Team":"ARI","Season":2024,"Actual_OPS":0.824,"Predicted_OPS":0.761},{"Player":"Ramón Urías","Team":"BAL","Season":2024,"Actual_OPS":0.675,"Predicted_OPS":0.711},{"Player":"Carlos Correa","Team":"2TM","Season":2025,"Actual_OPS":0.704,"Predicted_OPS":0.747},{"Player":"Jazz Chisholm Jr.","Team":"MIA","Season":2024,"Actual_OPS":0.813,"Predicted_OPS":0.736},{"Player":"Bobby Witt Jr.","Team":"KCR","Season":2025,"Actual_OPS":0.799,"Predicted_OPS":0.869},{"Player":"Miguel Rojas","Team":"LAD","Season":2024,"Actual_OPS":0.715,"Predicted_OPS":0.686},{"Player":"Xander Bogaerts","Team":"SDP","Season":2024,"Actual_OPS":0.72,"Predicted_OPS":0.718},{"Player":"Manny Machado","Team":"SDP","Season":2024,"Actual_OPS":0.795,"Predicted_OPS":0.789},{"Player":"Randy Arozarena","Team":"2TM","Season":2024,"Actual_OPS":0.712,"Predicted_OPS":0.742},{"Player":"Bryce Harper","Team":"PHI","Season":2024,"Actual_OPS":0.844,"Predicted_OPS":0.849},{"Player":"Salvador Perez","Team":"KCR","Season":2024,"Actual_OPS":0.729,"Predicted_OPS":0.749},{"Player":"Cody Bellinger","Team":"CHC","Season":2024,"Actual_OPS":0.813,"Predicted_OPS":0.753},{"Player":"Michael Harris II","Team":"ATL","Season":2024,"Actual_OPS":0.678,"Predicted_OPS":0.772},{"Player":"Bobby Witt Jr.","Team":"KCR","Season":2024,"Actual_OPS":0.852,"Predicted_OPS":0.906},{"Player":"Marcus Semien","Team":"TEX","Season":2024,"Actual_OPS":0.669,"Predicted_OPS":0.743},{"Player":"Mark Canha","Team":"2TM","Season":2024,"Actual_OPS":0.687,"Predicted_OPS":0.685},{"Player":"Josh Bell","Team":"2TM","Season":2024,"Actual_OPS":0.699,"Predicted_OPS":0.71},{"Player":"Andrew Benintendi","Team":"CHW","Season":2024,"Actual_OPS":0.738,"Predicted_OPS":0.695},{"Player":"Matt Chapman","Team":"SFG","Season":2024,"Actual_OPS":0.77,"Predicted_OPS":0.791},{"Player":"Brandon Marsh","Team":"PHI","Season":2023,"Actual_OPS":0.747,"Predicted_OPS":0.767},{"Player":"Jake Cronenworth","Team":"SDP","Season":2024,"Actual_OPS":0.744,"Predicted_OPS":0.72},{"Player":"Isaac Paredes","Team":"TBR","Season":2024,"Actual_OPS":0.809,"Predicted_OPS":0.776},{"Player":"Willi Castro","Team":"MIN","Season":2024,"Actual_OPS":0.679,"Predicted_OPS":0.726},{"Player":"William Contreras","Team":"MIL","Season":2024,"Actual_OPS":0.754,"Predicted_OPS":0.832},{"Player":"Ty France","Team":"SEA","Season":2024,"Actual_OPS":0.681,"Predicted_OPS":0.667},{"Player":"Michael A. Taylor","Team":"PIT","Season":2024,"Actual_OPS":0.625,"Predicted_OPS":0.615},{"Player":"Jake Burger","Team":"MIA","Season":2024,"Actual_OPS":0.687,"Predicted_OPS":0.76},{"Player":"Julio Rodríguez","Team":"SEA","Season":2024,"Actual_OPS":0.798,"Predicted_OPS":0.792},{"Player":"Harrison Bader","Team":"NYM","Season":2024,"Actual_OPS":0.796,"Predicted_OPS":0.662},{"Player":"Carlos Correa","Team":"MIN","Season":2024,"Actual_OPS":0.734,"Predicted_OPS":0.809},{"Player":"Nico Hoerner","Team":"CHC","Season":2025,"Actual_OPS":0.675,"Predicted_OPS":0.765},{"Player":"Rowdy Tellez","Team":"PIT","Season":2024,"Actual_OPS":0.719,"Predicted_OPS":0.69},{"Player":"Carlos Santana","Team":"PIT","Season":2023,"Actual_OPS":0.749,"Predicted_OPS":0.693},{"Player":"Andrés Giménez","Team":"CLE","Season":2024,"Actual_OPS":0.598,"Predicted_OPS":0.734},{"Player":"Corey Seager","Team":"TEX","Season":2024,"Actual_OPS":0.86,"Predicted_OPS":0.838}];
+
+const projections2027 = [{"Player":"Yordan Alvarez","Team":"HOU","Age":29,"OPS":1.066,"OPS_projected_2027":0.914,"OPS_change":-0.152,"WAR":3.1,"PA":300},{"Player":"James Wood","Team":"WSN","Age":23,"OPS":0.941,"OPS_projected_2027":0.841,"OPS_change":-0.1,"WAR":2.9,"PA":322},{"Player":"Bobby Witt Jr.","Team":"KCR","Age":26,"OPS":0.799,"OPS_projected_2027":0.807,"OPS_change":0.008,"WAR":3.6,"PA":307},{"Player":"Mike Trout","Team":"LAA","Age":34,"OPS":0.843,"OPS_projected_2027":0.771,"OPS_change":-0.072,"WAR":2.3,"PA":307},{"Player":"Zach Neto","Team":"LAA","Age":25,"OPS":0.78,"OPS_projected_2027":0.757,"OPS_change":-0.023,"WAR":1.7,"PA":302},{"Player":"Michael Busch","Team":"CHC","Age":28,"OPS":0.774,"OPS_projected_2027":0.755,"OPS_change":-0.019,"WAR":1.5,"PA":300},{"Player":"José Ramírez","Team":"CLE","Age":33,"OPS":0.765,"OPS_projected_2027":0.753,"OPS_change":-0.012,"WAR":2.3,"PA":307},{"Player":"Randy Arozarena","Team":"SEA","Age":31,"OPS":0.825,"OPS_projected_2027":0.752,"OPS_change":-0.073,"WAR":2.6,"PA":300},{"Player":"Pete Alonso","Team":"BAL","Age":31,"OPS":0.775,"OPS_projected_2027":0.748,"OPS_change":-0.027,"WAR":1.4,"PA":303},{"Player":"Julio Rodríguez","Team":"SEA","Age":25,"OPS":0.756,"OPS_projected_2027":0.747,"OPS_change":-0.009,"WAR":2.0,"PA":309},{"Player":"Taylor Ward","Team":"BAL","Age":32,"OPS":0.773,"OPS_projected_2027":0.734,"OPS_change":-0.039,"WAR":1.9,"PA":317},{"Player":"Gunnar Henderson","Team":"BAL","Age":25,"OPS":0.689,"OPS_projected_2027":0.733,"OPS_change":0.044,"WAR":1.0,"PA":317},{"Player":"Alex Bregman","Team":"CHC","Age":32,"OPS":0.685,"OPS_projected_2027":0.703,"OPS_change":0.018,"WAR":1.6,"PA":310},{"Player":"Nico Hoerner","Team":"CHC","Age":29,"OPS":0.675,"OPS_projected_2027":0.689,"OPS_change":0.014,"WAR":1.4,"PA":308}];
+
+// ── Chart 1: Scatter ──────────────────────────────────────
+const errors = predictedVsActual.map(d => d.Predicted_OPS - d.Actual_OPS);
+const colors = errors.map(e => e > 0 ? '#2563eb' : '#dc2626');
+
+const scatterTrace = {
+  x: predictedVsActual.map(d => d.Actual_OPS),
+  y: predictedVsActual.map(d => d.Predicted_OPS),
+  mode: 'markers',
+  type: 'scatter',
+  marker: { color: colors, size: 9, opacity: 0.85, line: { color: 'white', width: 1 } },
+  text: predictedVsActual.map(d => `<b>${d.Player}</b><br>Team: ${d.Team} · ${d.Season}<br>Actual OPS: ${d.Actual_OPS}<br>Predicted OPS: ${d.Predicted_OPS}<br>Error: ${(d.Predicted_OPS - d.Actual_OPS).toFixed(3)}`),
+  hovertemplate: '%{text}<extra></extra>',
+  name: 'Players'
+};
+
+const allOPS = predictedVsActual.flatMap(d => [d.Actual_OPS, d.Predicted_OPS]);
+const opsMin = Math.min(...allOPS) - 0.02;
+const opsMax = Math.max(...allOPS) + 0.02;
+
+const perfectLine = {
+  x: [opsMin, opsMax], y: [opsMin, opsMax],
+  mode: 'lines', type: 'scatter',
+  line: { color: '#94a3b8', dash: 'dash', width: 1.5 },
+  name: 'Perfect prediction', hoverinfo: 'skip'
+};
+
+Plotly.newPlot('chart-scatter', [scatterTrace, perfectLine], {
+  xaxis: { title: 'Actual OPS', tickfont: { size: 11 }, gridcolor: '#f1f5f9', range: [opsMin, opsMax] },
+  yaxis: { title: 'Predicted OPS', tickfont: { size: 11 }, gridcolor: '#f1f5f9', range: [opsMin, opsMax] },
+  plot_bgcolor: '#ffffff', paper_bgcolor: '#ffffff',
+  legend: { orientation: 'h', y: -0.15 },
+  margin: { t: 20, r: 20, b: 60, l: 60 },
+  annotations: [{
+    x: 0.02, y: 0.98, xref: 'paper', yref: 'paper',
+    text: 'Blue = over-predicted · Red = under-predicted',
+    showarrow: false, font: { size: 11, color: '#64748b' },
+    align: 'left'
+  }]
+}, { responsive: true, displayModeBar: false });
+
+// ── Chart 2: Error histogram ──────────────────────────────
+const errorVals = predictedVsActual.map(d => +(d.Predicted_OPS - d.Actual_OPS).toFixed(3));
+
+Plotly.newPlot('chart-errors', [{
+  x: errorVals, type: 'histogram', nbinsx: 18,
+  marker: { color: '#2563eb', opacity: 0.8, line: { color: 'white', width: 1 } },
+  name: 'Prediction errors'
+}, {
+  x: [0, 0], y: [0, 6], mode: 'lines', type: 'scatter',
+  line: { color: '#dc2626', dash: 'dash', width: 2 },
+  name: 'Zero error', hoverinfo: 'skip'
+}], {
+  xaxis: { title: 'Prediction Error (Predicted − Actual OPS)', tickfont: { size: 11 }, gridcolor: '#f1f5f9', zeroline: false },
+  yaxis: { title: 'Count', tickfont: { size: 11 }, gridcolor: '#f1f5f9' },
+  plot_bgcolor: '#ffffff', paper_bgcolor: '#ffffff',
+  legend: { orientation: 'h', y: -0.18 },
+  margin: { t: 20, r: 20, b: 60, l: 55 }
+}, { responsive: true, displayModeBar: false });
+
+// ── Chart 3: Projections bar ──────────────────────────────
+const projColors = projections2027.map(d => d.OPS_change >= 0 ? '#d97706' : '#2563eb');
+const projReversed = [...projections2027].reverse();
+
+Plotly.newPlot('chart-proj', [{
+  y: projReversed.map(d => d.Player),
+  x: projReversed.map(d => d.OPS_projected_2027),
+  type: 'bar', orientation: 'h',
+  marker: { color: projReversed.map(d => d.OPS_change >= 0 ? '#d97706' : '#2563eb'), opacity: 0.85 },
+  text: projReversed.map(d => d.OPS_projected_2027.toFixed(3)),
+  textposition: 'outside', textfont: { size: 10 },
+  hovertemplate: '<b>%{y}</b><br>Projected 2027 OPS: %{x:.3f}<extra></extra>',
+  name: 'Projected OPS'
+}], {
+  xaxis: { title: 'Projected 2027 OPS', tickfont: { size: 11 }, gridcolor: '#f1f5f9', range: [0, 1.0] },
+  yaxis: { tickfont: { size: 11 }, automargin: true },
+  plot_bgcolor: '#ffffff', paper_bgcolor: '#ffffff',
+  margin: { t: 20, r: 60, b: 50, l: 160 },
+  annotations: [{
+    x: 0.99, y: 0.01, xref: 'paper', yref: 'paper',
+    text: 'Gold = improvement expected · Blue = regression expected',
+    showarrow: false, font: { size: 10, color: '#64748b' }, align: 'right'
+  }]
+}, { responsive: true, displayModeBar: false });
+
+// ── Table ─────────────────────────────────────────────────
+let currentFilter = 'all';
+let currentSearch = '';
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  data.forEach((d, i) => {
+    const change = d.OPS_change;
+    const changeStr = (change >= 0 ? '+' : '') + change.toFixed(3);
+    const changeClass = change >= 0 ? 'change-pos' : 'change-neg';
+    const rankClass = i < 3 ? 'rank-badge top3' : 'rank-badge';
+    tbody.innerHTML += `
+      <tr>
+        <td><span class="${rankClass}">${i + 1}</span></td>
+        <td><strong>${d.Player}</strong></td>
+        <td>${d.Team}</td>
+        <td>${d.Age}</td>
+        <td class="ops-val">${d.OPS.toFixed(3)}</td>
+        <td class="ops-val"><strong>${d.OPS_projected_2027.toFixed(3)}</strong></td>
+        <td class="${changeClass}">${changeStr}</td>
+        <td>${d.WAR.toFixed(1)}</td>
+        <td>${d.PA}</td>
+      </tr>`;
+  });
+}
+
+function applyFilters() {
+  let filtered = [...projections2027];
+  if (currentFilter === 'up') filtered = filtered.filter(d => d.OPS_change >= 0);
+  if (currentFilter === 'down') filtered = filtered.filter(d => d.OPS_change < 0);
+  if (currentSearch) filtered = filtered.filter(d => d.Player.toLowerCase().includes(currentSearch.toLowerCase()));
+  renderTable(filtered);
+}
+
+function filterTable(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  currentSearch = e.target.value;
+  applyFilters();
+});
+
+// Initial render
+renderTable(projections2027);
+</script>
+</body>
+</html>
