@@ -333,9 +333,10 @@
       <button class="filter-btn active" onclick="setCompFilter('all',this)">All</button>
       <button class="filter-btn unlucky" onclick="setCompFilter('Rebounded ✓',this)">✓ Rebounded</button>
       <button class="filter-btn lucky" onclick="setCompFilter('Regressed ✓',this)">✓ Regressed</button>
-      <button class="filter-btn" onclick="setCompFilter('~ Neutral',this)">~ Neutral</button>
+      <button class="filter-btn" onclick="setCompFilter('Too Early',this)">Too Early</button>
       <button class="filter-btn" onclick="setCompFilter('Still Unlucky',this)">Still Unlucky</button>
       <button class="filter-btn" onclick="setCompFilter('Still Lucky',this)">Still Lucky</button>
+      <button class="filter-btn" onclick="setCompFilter('No Signal',this)">No Signal</button>
     </div>
     <div style="overflow-x:auto">
       <table class="val-table">
@@ -583,7 +584,7 @@ const COMP = [{"player_id": 646240, "Player": "Rafael Devers", "pa_2025": 729, "
 
 // ── Scatter: 2025 Luck vs 2026 wOBA Change ───────────
 (function(){
-  const PRED_COLOR = {'Rebounded ✓':'#16a34a','Regressed ✓':'#dc2626','Still Unlucky':'#f59e0b','Still Lucky':'#f59e0b','Stable':'#94a3b8'};
+  const PRED_COLOR = {'Rebounded ✓':'#16a34a','Regressed ✓':'#dc2626','Still Unlucky':'#f59e0b','Still Lucky':'#f59e0b','Too Early':'#3b82f6','No Signal':'#94a3b8'};
   const groups = {};
   COMP.forEach(d => {
     const k = d.prediction;
@@ -668,13 +669,13 @@ function getPrediction(luck2025, change){
   if(luck2025 < -0.020){
     if(change > MARGIN) return 'Rebounded ✓';
     if(change < -MARGIN) return 'Still Unlucky';
-    return '~ Neutral';
+    return 'Too Early';
   } else if(luck2025 > 0.020){
     if(change < -MARGIN) return 'Regressed ✓';
     if(change > MARGIN) return 'Still Lucky';
-    return '~ Neutral';
+    return 'Too Early';
   }
-  return 'Stable';
+  return 'No Signal';
 }
 
 function getCompRows(){
@@ -697,7 +698,8 @@ function renderComp(){
   const tbody=document.getElementById('compBody');
   tbody.innerHTML='';
   const PRED_TAG={
-    '~ Neutral':'background:#f0fdf4;color:#166534',
+    'Too Early':'background:#eff6ff;color:#1e40af',
+    'No Signal':'background:#f3f4f6;color:#374151',
     'Rebounded ✓':'background:#dcfce7;color:#166534',
     'Regressed ✓':'background:#fee2e2;color:#991b1b',
     'Still Unlucky':'background:#fef9c3;color:#713f12',
