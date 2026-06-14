@@ -107,7 +107,7 @@
 <div class="page-header">
   <p class="eyebrow">Portfolio · Predictive Modeling</p>
   <h1>MLB OPS Prediction Model</h1>
-  <p>Can we predict how well a batter will perform next season? This model uses linear regression to forecast OPS — a key offensive metric — based on a player's recent history, age, and playing time.</p>
+  <p>Can we predict how well a batter will perform next season? This model uses linear regression to forecast OPS (a key offensive metric) based on a player's recent history, age, and playing time.</p>
   <div class="model-badges">
     <span class="badge badge-blue">Python · scikit-learn</span>
     <span class="badge badge-green">Linear Regression</span>
@@ -117,9 +117,9 @@
 
 <div class="stats-bar">
   <div class="stats-inner">
-    <div class="stat-item"><span class="stat-value">0.0734</span><span class="stat-label">RMSE — avg. error in OPS points</span></div>
+    <div class="stat-item"><span class="stat-value">0.0734</span><span class="stat-label">RMSE, avg. error in OPS points</span></div>
     <div class="stat-divider"></div>
-    <div class="stat-item"><span class="stat-value">0.209</span><span class="stat-label">R² — variance explained</span></div>
+    <div class="stat-item"><span class="stat-value">0.209</span><span class="stat-label">R², variance explained</span></div>
     <div class="stat-divider"></div>
     <div class="stat-item"><span class="stat-value">1,054</span><span class="stat-label">Player-Seasons</span></div>
     <div class="stat-divider"></div>
@@ -136,7 +136,7 @@
     <div class="method-grid">
       <div class="method-card">
         <h4>What We're Predicting</h4>
-        <p>Next-season <code>OPS</code> (On-base Plus Slugging) — adds how often a player gets on base to how much power they show. A score above .800 is excellent; below .700 is below average.</p>
+        <p>Next-season <code>OPS</code> (On-base Plus Slugging): combines how often a player gets on base with their power output. A score above .800 is excellent; below .700 is below average.</p>
       </div>
       <div class="method-card">
         <h4>What the Model Uses</h4>
@@ -144,7 +144,7 @@
       </div>
       <div class="method-card">
         <h4>The Algorithm</h4>
-        <p>Linear regression — the simplest predictive model. Trained on 80% of the data, tested on the remaining 20% it has never seen. Measured by RMSE (average error) and R² (explained variance).</p>
+        <p>Linear regression: the simplest predictive model. Trained on 80% of the data, tested on the remaining 20% it has never seen. Measured by RMSE (average error) and R² (explained variance).</p>
       </div>
       <div class="method-card">
         <h4>Data Source</h4>
@@ -156,25 +156,25 @@
 
 <div class="section">
   <div class="container">
-    <h2 class="section-title">Under the Hood — How a Prediction Is Made</h2>
+    <h2 class="section-title">Under the Hood: How a Prediction Is Made</h2>
     <p class="section-desc">Let's walk through exactly how the model predicted Juan Soto's 2025 OPS, step by step. No black box.</p>
     <div class="method-grid" style="margin-bottom:1.5rem;">
       <div class="method-card" style="border-left-color:#d97706;">
-        <h4>Step 1 — Gather Inputs</h4>
+        <h4>Step 1. Gather Inputs</h4>
         <p>Juan Soto's 2024 season: <code>OPS = 0.921</code>, <code>PA = 715</code>, <code>WAR = 6.1</code>, age in 2025 = <code>26</code>. Rolling 2-season average: <code>OPS_avg2 = 0.884</code> (avg. of 2023 and 2024).</p>
       </div>
       <div class="method-card" style="border-left-color:#d97706;">
-        <h4>Step 2 — Apply the Formula</h4>
+        <h4>Step 2. Apply the Formula</h4>
         <p>The model learned these weights from the data:<br/>
         <code>OPS × 0.39</code> + <code>OPS_avg2 × 0.24</code> + <code>Age × −0.003</code> + <code>WAR × 0.006</code> + <code>PA × 0.0001</code> + <code>0.31</code></p>
       </div>
       <div class="method-card" style="border-left-color:#d97706;">
-        <h4>Step 3 — Compute</h4>
+        <h4>Step 3. Compute</h4>
         <p><code>(0.921 × 0.39)</code> + <code>(0.884 × 0.24)</code> + <code>(26 × −0.003)</code> + <code>(6.1 × 0.006)</code> + <code>(715 × 0.0001)</code> + <code>0.31</code><br/>= <strong>0.925</strong></p>
       </div>
       <div class="method-card" style="border-left-color:#d97706;">
-        <h4>Step 4 — Compare to Reality</h4>
-        <p>Soto's actual 2025 OPS: <code>0.921</code>. The model predicted <code>0.925</code> — an error of just <strong>+0.004</strong>. One of the model's most accurate predictions.</p>
+        <h4>Step 4. Compare to Reality</h4>
+        <p>Soto's actual 2025 OPS: <code>0.921</code>. The model predicted <code>0.925</code>, an error of just <strong>+0.004</strong>. One of the model's most accurate predictions.</p>
       </div>
     </div>
     <p style="font-size:0.85rem; color:var(--muted); border-left:3px solid var(--border); padding-left:1rem;">Note: current OPS is the strongest predictor (coefficient 0.39), followed by the 2-season average (0.24). Age has a small negative effect (−0.003 per year), consistent with the well-documented aging curve in baseball.</p>
@@ -184,7 +184,7 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">How Accurate Were the Predictions?</h2>
-    <p class="section-desc">This chart compares what the model predicted to what actually happened — using the 20% of data held back during training (seasons 2023–2025). Each dot is a player-season. The closer a dot is to the diagonal line, the more accurate the prediction. Blue dots = the model overestimated; red dots = the model underestimated. Hover over any dot to see the player details.</p>
+    <p class="section-desc">This chart compares what the model predicted to what actually happened, using the 20% of data held back during training (seasons 2023–2025). Each dot is a player-season. The closer a dot is to the diagonal line, the more accurate the prediction. Blue dots = the model overestimated; red dots = the model underestimated. Hover over any dot to see the player details.</p>
     <div style="background:#eff6ff; border:1px solid #bfdbfe; padding:0.75rem 1rem; margin-bottom:0.75rem; font-size:0.82rem; color:#1e40af; border-left:3px solid var(--blue);">
       <strong>Why isn't Aaron Judge here?</strong> The model requires at least 3 consecutive qualifying seasons (300+ PA) to compute the rolling average. Judge's injury-shortened seasons break this continuity, so he is excluded from the test set. He appears in the 2026 projections where his full 2025 season provides sufficient data.
     </div>
@@ -201,7 +201,7 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">Is the Model Biased?</h2>
-    <p class="section-desc">This chart shows how the prediction errors are distributed. A good model should make roughly equal numbers of over- and under-predictions — the bars should be roughly symmetric around zero. A systematic lean to one side would mean the model is consistently over- or under-estimating performance.</p>
+    <p class="section-desc">This chart shows how the prediction errors are distributed. A good model should make roughly equal numbers of over- and under-predictions — the bars should be roughly symmetric around zero. A systematic lean to one side means the model is consistently over- or under-estimating performance.</p>
     <div class="chart-box">
       <div id="chart-errors" style="height:380px;"></div>
       <div class="chart-source">Source: Baseball Reference (baseball-reference.com) · Model: Linear Regression, scikit-learn · Nathan Brès, 2026</div>
@@ -212,7 +212,7 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">Who's Projected to Shine in 2026?</h2>
-    <p class="section-desc">Using 2025 stats as input, the model projects each player's OPS for 2026. Gold bars = players expected to improve on their 2025 performance. Blue bars = players expected to regress. Note that elite players like Aaron Judge tend to be projected lower than their peak — this is regression to the mean, a well-known statistical phenomenon.</p>
+    <p class="section-desc">Using 2025 stats as input, the model projects each player's OPS for 2026. Gold bars = players expected to improve on their 2025 performance. Blue bars = players expected to regress. Note that elite players like Aaron Judge tend to be projected lower than their peak; this is regression to the mean, a well-known statistical phenomenon.</p>
     <div class="disclaimer">⚠ Analysis as of June 12, 2026 · Projections based on 2025 data · Only players with 300+ PA included</div>
     <div class="chart-box" style="margin-bottom:2rem;">
       <div id="chart-proj" style="height:520px;"></div>
@@ -253,7 +253,7 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">What This Model Can't Do (Yet)</h2>
-    <p class="section-desc">A model is only as honest as its limitations. Here's what's missing — and what comes next.</p>
+    <p class="section-desc">A model is only as honest as its limitations. Here's what's missing, and what comes next.</p>
     <div class="limit-grid">
       <div class="limit-card">
         <h4>R² of 0.209</h4>
@@ -265,7 +265,7 @@
       </div>
       <div class="limit-card">
         <h4>No Statcast Data</h4>
-        <p>Exit velocity, launch angle, and barrel rate are among the strongest predictors of future performance — they capture "luck-independent" skill. Not yet included here.</p>
+        <p>Exit velocity, launch angle, and barrel rate are among the strongest predictors of future performance. They capture "luck-independent" skill. Not yet included here.</p>
       </div>
       <div class="limit-card">
         <h4>No Park Adjustments</h4>

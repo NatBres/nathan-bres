@@ -85,7 +85,7 @@
 <div class="page-header">
   <p class="eyebrow">Portfolio · Statcast Analytics</p>
   <h1>Statcast Impact on Performance</h1>
-  <p>Correlating exit velocity and launch angle with outcomes to identify unlucky hitters of 2025 — then validating predictions against 2026 live data.</p>
+  <p>Correlating exit velocity and launch angle with outcomes to identify unlucky hitters of 2025, then validating predictions against 2026 live data.</p>
   <div class="badges">
     <span class="badge badge-blue">Python · Pandas</span>
     <span class="badge badge-green">xwOBA · xBA · xSLG · Barrel%</span>
@@ -111,7 +111,7 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">How It Works</h2>
-    <p class="section-desc">Statcast tracks every batted ball — its exit velocity, launch angle, and direction. From these physical measurements, MLB calculates <strong>expected stats</strong> (xBA, xSLG, xwOBA) that represent what a player <em>should</em> have produced based on contact quality alone, independent of luck.</p>
+    <p class="section-desc">Statcast tracks every batted ball: its exit velocity, launch angle, and direction. From these physical measurements, MLB calculates <strong>expected stats</strong> (xBA, xSLG, xwOBA) that represent what a player <em>should</em> have produced based on contact quality alone, independent of luck.</p>
     <div class="method-grid">
       <div class="method-card">
         <h4>Exit Velocity</h4>
@@ -127,7 +127,7 @@
       </div>
       <div class="method-card">
         <h4>Barrel Rate</h4>
-        <p>% of batted balls that are "barreled" — ideal exit velocity + launch angle combo. A barrel produces a .500+ BA and 1.500+ SLG. Elite: 12%+. League avg: ~7%.</p>
+        <p>% of batted balls that are "barreled" (ideal exit velocity and launch angle combined). A barrel produces a .500+ BA and 1.500+ SLG. Elite: 12%+. League avg: ~7%.</p>
       </div>
     </div>
   </div>
@@ -137,19 +137,19 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">Key Findings</h2>
-    <p class="section-desc">Three patterns stand out from the 2025 Statcast data — read alongside age, the picture becomes much clearer. All predictions are validated against 2026 live results below.</p>
+    <p class="section-desc">Three patterns stand out from the 2025 Statcast data. Read alongside age, the picture becomes much clearer. All predictions are validated against 2026 live results below.</p>
     <div class="finding-grid">
       <div class="finding-card green">
-        <h4>Most Unlucky — Strong Rebound Expected</h4>
-        <p><strong>Juan Soto</strong> (26, Prime) hits 93.8 mph with 18.1% barrel rate — elite contact — yet his wOBA (.390) trails his xwOBA (.429) by <strong>39 points</strong>. At 26 and in his physical peak, this gap is almost entirely luck. A significant bounce-back is near-certain.<br><br><strong>Dansby Swanson</strong> (31, Veteran) and <strong>Corey Seager</strong> (31, Veteran) also show large negative gaps despite solid contact metrics — unlucky in their prime, not declining.</p>
+        <h4>Most Unlucky: Strong Rebound Expected</h4>
+        <p><strong>Juan Soto</strong> (26, Prime) hits 93.8 mph with 18.1% barrel rate (elite contact), yet his wOBA (.390) trails his xwOBA (.429) by <strong>39 points</strong>. At 26 and in his physical peak, this gap is almost entirely luck. A significant bounce-back is near-certain.<br><br><strong>Dansby Swanson</strong> (31, Veteran) and <strong>Corey Seager</strong> (31, Veteran) also show large negative gaps despite solid contact metrics. Unlucky in their prime, not declining.</p>
       </div>
       <div class="finding-card red">
-        <h4>Biggest Regression Risks — Age Matters</h4>
-        <p><strong>Miguel Andujar</strong> (30, Prime) posts a wOBA 56 points above his xwOBA with only 88 mph exit velocity and 4.7% barrel rate — pure luck, and at 30 he has no youth excuse. Sharp decline incoming.<br><br><strong>Jose Altuve</strong> (35, Veteran) overperforms by 31 points with below-average contact quality. At 35, that gap is unlikely to sustain — aging curve + regression is a dangerous combination.</p>
+        <h4>Biggest Regression Risks: Age Matters</h4>
+        <p><strong>Miguel Andujar</strong> (30, Prime) posts a wOBA 56 points above his xwOBA with only 88 mph exit velocity and 4.7% barrel rate. Pure luck, and at 30 he has no youth excuse. Sharp decline incoming.<br><br><strong>Jose Altuve</strong> (35, Veteran) overperforms by 31 points with below-average contact quality. At 35, that gap is unlikely to sustain. Aging curve combined with regression is a dangerous combination.</p>
       </div>
       <div class="finding-card amber">
         <h4>Age Changes Everything</h4>
-        <p>An unlucky <strong>young</strong> player (≤25) is a buy-low gem — skills are developing and results will catch up. An unlucky <strong>veteran</strong> (35+) may be showing real physical decline disguised as bad luck.<br><br>Conversely, a lucky <strong>young</strong> player might be developing genuine bat-to-ball skills. A lucky <strong>veteran</strong> is almost certainly riding a BABIP wave that will crash. Use the age filters below to explore these dynamics.</p>
+        <p>An unlucky <strong>young</strong> player (≤25) is a buy-low gem. Skills are still developing and results will catch up. An unlucky <strong>veteran</strong> (35+) may be showing real physical decline, disguised as bad luck.<br><br>Conversely, a lucky <strong>young</strong> player might be developing genuine bat-to-ball skills. A lucky <strong>veteran</strong> is almost certainly riding a BABIP wave that will not last. Use the age filters below to explore these dynamics.</p>
       </div>
     </div>
   </div>
@@ -183,7 +183,7 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">Top 15 Most Unlucky Hitters</h2>
-    <p class="section-desc">Players whose actual wOBA most underperforms their expected wOBA — prime buy-low candidates and breakout candidates for the second half.</p>
+    <p class="section-desc">Players whose actual wOBA most underperforms their expected wOBA. Prime buy-low candidates and breakout candidates for the second half of the season.</p>
     <div class="chart-box">
       <div id="chart-unlucky" style="height:420px"></div>
       <div class="chart-source">Source: Baseball Savant · 2025 · Nathan Brès, 2026</div>
@@ -195,7 +195,7 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">Top 15 Regression Risks</h2>
-    <p class="section-desc">Players overperforming their expected stats — likely to decline as their results revert to what their contact quality predicts.</p>
+    <p class="section-desc">Players overperforming their expected stats, likely to decline as their results revert to what their contact quality predicts.</p>
     <div class="chart-box">
       <div id="chart-lucky" style="height:420px"></div>
       <div class="chart-source">Source: Baseball Savant · 2025 · Nathan Brès, 2026</div>
@@ -211,7 +211,7 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1.25rem">
       <div style="background:#eff6ff;border-left:3px solid #3b82f6;padding:.85rem 1rem;font-size:.82rem">
         <strong style="color:#1d4ed8;display:block;margin-bottom:.25rem">🔵 ≤25 — Young</strong>
-        <span style="color:#374151">Unlucky = breakout candidate. Lucky = possibly real skill emerging — monitor closely.</span>
+        <span style="color:#374151">Unlucky = breakout candidate. Lucky = possibly real skill emerging, worth monitoring closely.</span>
       </div>
       <div style="background:#f0fdf4;border-left:3px solid #16a34a;padding:.85rem 1rem;font-size:.82rem">
         <strong style="color:#166534;display:block;margin-bottom:.25rem">🟢 26–30 — Prime</strong>
@@ -271,20 +271,20 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">2025 Predictions vs. 2026 Reality</h2>
-    <p class="section-desc">The real test of any predictive model: did the players flagged as unlucky in 2025 actually rebound in 2026? And did the lucky players regress? Here's what happened — 184 players appear in both datasets.</p>
+    <p class="section-desc">The real test of any predictive model: did the players flagged as unlucky in 2025 actually rebound in 2026? And did the lucky players regress? Here's what happened. 184 players appear in both datasets.</p>
 
     <div class="finding-grid" style="margin-bottom:1.75rem">
       <div class="finding-card green">
-        <h4>✓ Model Accuracy — 65%</h4>
-        <p>Of the 46 players flagged as significantly unlucky or lucky in 2025, <strong>30 moved in the predicted direction</strong> in 2026. That's meaningful signal — Statcast xwOBA is a genuine predictor of future performance, not just noise.</p>
+        <h4>✓ Model Accuracy: 65%</h4>
+        <p>Of the 46 players flagged as significantly unlucky or lucky in 2025, <strong>30 moved in the predicted direction</strong> in 2026. That's meaningful signal. Statcast xwOBA is a genuine predictor of future performance, not just noise.</p>
       </div>
       <div class="finding-card green">
-        <h4>Biggest Rebound — Otto Lopez +80 pts</h4>
-        <p><strong>Otto Lopez</strong> (26) was 35 points below his xwOBA in 2025 (.295 actual vs .330 expected). In 2026 his wOBA jumped to <strong>.375</strong> — a gain of 80 points — exactly the correction the model predicted. Michael Harris II (+79 pts) and Adley Rutschman (+67 pts) followed the same pattern.</p>
+        <h4>Biggest Rebound: Otto Lopez +80 pts</h4>
+        <p><strong>Otto Lopez</strong> (26) was 35 points below his xwOBA in 2025 (.295 actual vs .330 expected). In 2026 his wOBA jumped to <strong>.375</strong>, a gain of 80 points, exactly the correction the model predicted. Michael Harris II (+79 pts) and Adley Rutschman (+67 pts) followed the same pattern.</p>
       </div>
       <div class="finding-card red">
-        <h4>Biggest Regression — Cal Raleigh −140 pts</h4>
-        <p><strong>Cal Raleigh</strong> (28) was 21 points above his xwOBA in 2025 (.392 actual vs .371 expected). In 2026 his wOBA collapsed to <strong>.252</strong> — a drop of 140 points. TJ Friedl (−93 pts) and Zach McKinstry (−89 pts) also fell sharply after overperforming in 2025.</p>
+        <h4>Biggest Regression: Cal Raleigh −140 pts</h4>
+        <p><strong>Cal Raleigh</strong> (28) was 21 points above his xwOBA in 2025 (.392 actual vs .371 expected). In 2026 his wOBA collapsed to <strong>.252</strong>, a drop of 140 points. TJ Friedl (−93 pts) and Zach McKinstry (−89 pts) also fell sharply after overperforming in 2025.</p>
       </div>
     </div>
   </div>
