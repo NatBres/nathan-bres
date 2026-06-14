@@ -133,19 +133,19 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">Key Findings</h2>
-    <p class="section-desc">Three patterns stand out from the 2025 Statcast data.</p>
+    <p class="section-desc">Three patterns stand out from the 2025 Statcast data — read alongside age, the picture becomes much clearer.</p>
     <div class="finding-grid">
       <div class="finding-card green">
-        <h4>Most Unlucky Hitter</h4>
-        <p><strong>Juan Soto</strong> hits the ball at 93.8 mph with 18.1% barrel rate — elite contact quality — yet his wOBA (.390) trails his xwOBA (.429) by <strong>39 points</strong>. His actual stats massively understate his true production. Expect a significant bounce-back.</p>
+        <h4>Most Unlucky — Strong Rebound Expected</h4>
+        <p><strong>Juan Soto</strong> (26, Prime) hits 93.8 mph with 18.1% barrel rate — elite contact — yet his wOBA (.390) trails his xwOBA (.429) by <strong>39 points</strong>. At 26 and in his physical peak, this gap is almost entirely luck. A significant bounce-back is near-certain.<br><br><strong>Dansby Swanson</strong> (31, Veteran) and <strong>Corey Seager</strong> (31, Veteran) also show large negative gaps despite solid contact metrics — unlucky in their prime, not declining.</p>
       </div>
       <div class="finding-card red">
-        <h4>Biggest Regression Risk</h4>
-        <p><strong>Miguel Andujar</strong> posts a wOBA 56 points above his xwOBA (.354 vs .298) — the largest gap in the dataset. With only 88.0 mph avg exit velocity and 4.7% barrel rate, his results are driven by luck, not quality contact. Sharp decline incoming.</p>
+        <h4>Biggest Regression Risks — Age Matters</h4>
+        <p><strong>Miguel Andujar</strong> (30, Prime) posts a wOBA 56 points above his xwOBA with only 88 mph exit velocity and 4.7% barrel rate — pure luck, and at 30 he has no youth excuse. Sharp decline incoming.<br><br><strong>Jose Altuve</strong> (35, Veteran) overperforms by 31 points with below-average contact quality. At 35, that gap is unlikely to sustain — aging curve + regression is a dangerous combination.</p>
       </div>
       <div class="finding-card amber">
-        <h4>Hard Contact, Bad Results</h4>
-        <p><strong>Salvador Perez</strong> hits 90+ mph with 14.8% barrels but his wOBA (.311) is 46 points below his xwOBA (.357). A likely victim of defensive positioning and bad BABIP luck — his underlying quality is far better than his line shows.</p>
+        <h4>Age Changes Everything</h4>
+        <p>An unlucky <strong>young</strong> player (≤25) is a buy-low gem — skills are developing and results will catch up. An unlucky <strong>veteran</strong> (35+) may be showing real physical decline disguised as bad luck.<br><br>Conversely, a lucky <strong>young</strong> player might be developing genuine bat-to-ball skills. A lucky <strong>veteran</strong> is almost certainly riding a BABIP wave that will crash. Use the age filters below to explore these dynamics.</p>
       </div>
     </div>
   </div>
@@ -203,7 +203,25 @@
 <div class="section">
   <div class="container">
     <h2 class="section-title">Full Statcast Table</h2>
-    <p class="section-desc">All 251 qualified batters. Luck = wOBA − xwOBA. Positive = overperforming, Negative = underperforming.</p>
+    <p class="section-desc">All 251 qualified batters. Luck = wOBA − xwOBA. Positive = overperforming, Negative = underperforming. Combine age and luck filters to find the most actionable insights.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1.25rem">
+      <div style="background:#eff6ff;border-left:3px solid #3b82f6;padding:.85rem 1rem;font-size:.82rem">
+        <strong style="color:#1d4ed8;display:block;margin-bottom:.25rem">🔵 ≤25 — Young</strong>
+        <span style="color:#374151">Unlucky = breakout candidate. Lucky = possibly real skill emerging — monitor closely.</span>
+      </div>
+      <div style="background:#f0fdf4;border-left:3px solid #16a34a;padding:.85rem 1rem;font-size:.82rem">
+        <strong style="color:#166534;display:block;margin-bottom:.25rem">🟢 26–30 — Prime</strong>
+        <span style="color:#374151">Most reliable signal. Luck gaps here are almost purely BABIP variance — regression is highly predictable.</span>
+      </div>
+      <div style="background:#fefce8;border-left:3px solid #d97706;padding:.85rem 1rem;font-size:.82rem">
+        <strong style="color:#92400e;display:block;margin-bottom:.25rem">🟡 31–35 — Veteran</strong>
+        <span style="color:#374151">Unlucky veterans may be declining, not just unlucky. Lucky veterans are at high regression risk.</span>
+      </div>
+      <div style="background:#fef2f2;border-left:3px solid #dc2626;padding:.85rem 1rem;font-size:.82rem">
+        <strong style="color:#991b1b;display:block;margin-bottom:.25rem">🔴 36+ — Aging</strong>
+        <span style="color:#374151">Treat with caution. Bad luck and physical decline are hard to separate at this stage.</span>
+      </div>
+    </div>
     <div class="filter-row">
       <input class="search-input" id="searchInput" type="text" placeholder="Search player…"/>
       <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
