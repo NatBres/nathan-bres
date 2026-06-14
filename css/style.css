@@ -245,6 +245,9 @@ section { padding: 6rem 2rem; width: 100%; text-align: center; }
   background-repeat: no-repeat;
   background-color: #0a0d14;
 }
+.card-thumb--moneyball {
+  background: linear-gradient(135deg, #0f2e1a 0%, #0a1628 100%);
+}
 .card-thumb--statcast {
   background: linear-gradient(135deg, #0f1f2e 0%, #0a1628 100%);
 }
